@@ -33,7 +33,14 @@ this is a quiet corner of the internet.
 <hr>
   
 <hr>
-<h2>public room</h2>
+<hr>
+<h2>rooms</h2>
+
+<select id="room-select">
+  <option value="roomA">roomA</option>
+  <option value="roomB">roomB</option>
+  <option value="roomC">roomC</option>
+</select>
 
 <div id="chat-box"></div>
 
@@ -70,6 +77,8 @@ presence > performance
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
+  import { getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
   
   const firebaseConfig = {
     apiKey: "AIzaSyAyHfbHaJj4-ON0jPy1be7XLO5WUOFVRyE",
@@ -87,21 +96,32 @@ presence > performance
 
   console.log("Firebase + Auth initialized");
 
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
   if (user) {
     const isAdmin = user.uid === ADMIN_UID;
 
-    console.log("UID:", user.uid);
-    console.log("Is admin:", isAdmin);
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      const randomName = "user_" + Math.random().toString(36).substring(2, 8);
+      await setDoc(userRef, {
+        displayName: randomName
+      });
+    }
+
+    const updatedSnap = await getDoc(userRef);
+    const displayName = updatedSnap.data().displayName;
 
     document.getElementById("user-status").textContent =
-      "Logged in as: " + user.email + (isAdmin ? " (admin)" : "");
+      "Logged in as: " + displayName + (isAdmin ? " (admin)" : "");
 
   } else {
     document.getElementById("user-status").textContent =
       "Not logged in";
   }
 });
+    
   window.signup = async function() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
@@ -129,53 +149,74 @@ presence > performance
     alert("Logged out");
   };
 
-  const messagesRef = collection(db, "publicMessages");
-const q = query(messagesRef, orderBy("createdAt"));
+let currentRoom = "roomA";
 
-onSnapshot(q, (snapshot) => {
-  const chatBox = document.getElementById("chat-box");
-  chatBox.innerHTML = "";
+function getRoomRef() {
+  return collection(db, "rooms", currentRoom, "messages");
+}
 
-  snapshot.forEach((docSnap) => {
-    const data = docSnap.data();
-    const messageDiv = document.createElement("div");
-
-    messageDiv.innerHTML =
-      "<strong>" + data.email + ":</strong> " + data.text;
-
-    if (auth.currentUser && auth.currentUser.uid === ADMIN_UID) {
-      const deleteBtn = document.createElement("button");
-      deleteBtn.textContent = "delete";
-      deleteBtn.onclick = async () => {
-        await deleteDoc(doc(db, "publicMessages", docSnap.id));
-      };
-      messageDiv.appendChild(deleteBtn);
-    }
-
-    chatBox.appendChild(messageDiv);
-  });
+  document.getElementById("room-select").addEventListener("change", (e) => {
+  currentRoom = e.target.value;
+  loadMessages();
 });
 
-window.sendMessage = async function () {
-  const input = document.getElementById("message-input");
-  const text = input.value;
+let unsubscribe;
 
+function loadMessages() {
+  if (unsubscribe) unsubscribe();
+
+  const q = query(getRoomRef(), orderBy("createdAt"));
+
+  unsubscribe = onSnapshot(q, async (snapshot) => {
+    const chatBox = document.getElementById("chat-box");
+    chatBox.innerHTML = "";
+
+    for (const docSnap of snapshot.docs) {
+      const data = docSnap.data();
+
+      const messageDiv = document.createElement("div");
+      messageDiv.innerHTML =
+        "<strong>" + data.displayName + ":</strong> " + data.text;
+
+      if (auth.currentUser && auth.currentUser.uid === ADMIN_UID) {
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "delete";
+        deleteBtn.onclick = async () => {
+          await deleteDoc(docSnap.ref);
+        };
+        messageDiv.appendChild(deleteBtn);
+      }
+
+      chatBox.appendChild(messageDiv);
+    }
+  });
+}
+  
+window.sendMessage = async function () {
   if (!auth.currentUser) {
     alert("Login first.");
     return;
   }
 
+  const input = document.getElementById("message-input");
+  const text = input.value;
   if (text.trim() === "") return;
 
-  await addDoc(messagesRef, {
+  const userRef = doc(db, "users", auth.currentUser.uid);
+  const userSnap = await getDoc(userRef);
+  const displayName = userSnap.data().displayName;
+
+  await addDoc(getRoomRef(), {
     text: text,
-    email: auth.currentUser.email,
+    displayName: displayName,
     uid: auth.currentUser.uid,
     createdAt: serverTimestamp()
   });
 
   input.value = "";
 };
+
+  loadMessages();
 </script>
 
 </body>
