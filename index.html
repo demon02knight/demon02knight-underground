@@ -60,22 +60,25 @@ presence > performance
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const ADMIN_UID = "rHpRdUEU0NbRui3qxmetIjQESuk1";
 
   console.log("Firebase + Auth initialized");
 
   onAuthStateChanged(auth, (user) => {
   if (user) {
+    const isAdmin = user.uid === ADMIN_UID;
+
     console.log("UID:", user.uid);
-    console.log("Logged in as:", user.email);
+    console.log("Is admin:", isAdmin);
 
     document.getElementById("user-status").textContent =
-      "Logged in as: " + user.email;
+      "Logged in as: " + user.email + (isAdmin ? " (admin)" : "");
+
   } else {
     document.getElementById("user-status").textContent =
       "Not logged in";
   }
 });
-
   window.signup = async function() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
