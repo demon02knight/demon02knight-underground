@@ -160,7 +160,7 @@ presence > performance
 window.saveUsername = async function () {
   if (!auth.currentUser) return;
 
-  const newName = document.getElementById("username-input").value.trim();
+  const newName = document.getElementById("username-input").value.trim().toLowerCase();
 
   if (newName.length < 3) {
     alert("Username must be at least 3 characters.");
@@ -168,11 +168,38 @@ window.saveUsername = async function () {
   }
 
   const userRef = doc(db, "users", auth.currentUser.uid);
+  const userSnap = await getDoc(userRef);
 
-  await setDoc(userRef, { displayName: newName });
+  // If locked and not admin → block
+  if (userSnap.exists() && userSnap.data().locked && auth.currentUser.uid !== ADMIN_UID) {
+    alert("Username is locked.");
+    return;
+  }
+
+  // Check if username already taken
+  const usernameRef = doc(db, "usernames", newName);
+  const usernameSnap = await getDoc(usernameRef);
+
+  if (usernameSnap.exists() && usernameSnap.data().uid !== auth.currentUser.uid) {
+    alert("Username already taken.");
+    return;
+  }
+
+  // Reserve username
+  await setDoc(usernameRef, {
+    uid: auth.currentUser.uid
+  });
+
+  // Save to user profile
+  await setDoc(userRef, {
+    displayName: newName,
+    locked: true
+  });
 
   document.getElementById("user-status").textContent =
     "Logged in as: " + newName + (auth.currentUser.uid === ADMIN_UID ? " (admin)" : "");
+
+  alert("Username saved and locked.");
 };
   
 let currentRoom = "roomA";
