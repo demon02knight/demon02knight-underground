@@ -31,7 +31,16 @@ this is a quiet corner of the internet.
 <button onclick="logout()">Logout</button>
 
 <hr>
+  
+<hr>
+<h2>public room</h2>
 
+<div id="chat-box"></div>
+
+<input type="text" id="message-input" placeholder="leave something behind...">
+<button onclick="sendMessage()">Send</button>
+<hr>
+  
 <p class="small">
 signal > noise<br>
 depth > velocity<br>
@@ -49,6 +58,19 @@ presence > performance
     onAuthStateChanged
   } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
+  import {
+  getFirestore,
+  collection,
+  addDoc,
+  onSnapshot,
+  query,
+  orderBy,
+  deleteDoc,
+  doc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+  
   const firebaseConfig = {
     apiKey: "AIzaSyAyHfbHaJj4-ON0jPy1be7XLO5WUOFVRyE",
     authDomain: "demon02knight-underground.firebaseapp.com",
@@ -60,6 +82,7 @@ presence > performance
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db = getFirestore(app);
   const ADMIN_UID = "rHpRdUEU0NbRui3qxmetIjQESuk1";
 
   console.log("Firebase + Auth initialized");
@@ -105,6 +128,54 @@ presence > performance
     await signOut(auth);
     alert("Logged out");
   };
+
+  const messagesRef = collection(db, "publicMessages");
+const q = query(messagesRef, orderBy("createdAt"));
+
+onSnapshot(q, (snapshot) => {
+  const chatBox = document.getElementById("chat-box");
+  chatBox.innerHTML = "";
+
+  snapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    const messageDiv = document.createElement("div");
+
+    messageDiv.innerHTML =
+      "<strong>" + data.email + ":</strong> " + data.text;
+
+    if (auth.currentUser && auth.currentUser.uid === ADMIN_UID) {
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "delete";
+      deleteBtn.onclick = async () => {
+        await deleteDoc(doc(db, "publicMessages", docSnap.id));
+      };
+      messageDiv.appendChild(deleteBtn);
+    }
+
+    chatBox.appendChild(messageDiv);
+  });
+});
+
+window.sendMessage = async function () {
+  const input = document.getElementById("message-input");
+  const text = input.value;
+
+  if (!auth.currentUser) {
+    alert("Login first.");
+    return;
+  }
+
+  if (text.trim() === "") return;
+
+  await addDoc(messagesRef, {
+    text: text,
+    email: auth.currentUser.email,
+    uid: auth.currentUser.uid,
+    createdAt: serverTimestamp()
+  });
+
+  input.value = "";
+};
 </script>
 
 </body>
