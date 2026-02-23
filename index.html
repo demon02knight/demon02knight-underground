@@ -29,6 +29,10 @@ this is a quiet corner of the internet.
 <button onclick="signup()">Sign Up</button>
 <button onclick="login()">Login</button>
 <button onclick="logout()">Logout</button>
+  <div id="username-section" style="display:none;">
+  <input type="text" id="username-input" placeholder="choose a username">
+  <button onclick="saveUsername()">Save</button>
+</div>
 
 <hr>
   
@@ -97,28 +101,32 @@ presence > performance
   console.log("Firebase + Auth initialized");
 
   onAuthStateChanged(auth, async (user) => {
+  const usernameSection = document.getElementById("username-section");
+
   if (user) {
     const isAdmin = user.uid === ADMIN_UID;
+    usernameSection.style.display = "block";
 
     const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
 
+    let displayName;
+
     if (!userSnap.exists()) {
-      const randomName = "user_" + Math.random().toString(36).substring(2, 8);
-      await setDoc(userRef, {
-        displayName: randomName
-      });
+      displayName = "";
+      await setDoc(userRef, { displayName: "" });
+    } else {
+      displayName = userSnap.data().displayName;
     }
 
-    const updatedSnap = await getDoc(userRef);
-    const displayName = updatedSnap.data().displayName;
+    document.getElementById("username-input").value = displayName || "";
 
     document.getElementById("user-status").textContent =
-      "Logged in as: " + displayName + (isAdmin ? " (admin)" : "");
+      "Logged in as: " + (displayName || "no username") + (isAdmin ? " (admin)" : "");
 
   } else {
-    document.getElementById("user-status").textContent =
-      "Not logged in";
+    usernameSection.style.display = "none";
+    document.getElementById("user-status").textContent = "Not logged in";
   }
 });
     
@@ -149,6 +157,24 @@ presence > performance
     alert("Logged out");
   };
 
+window.saveUsername = async function () {
+  if (!auth.currentUser) return;
+
+  const newName = document.getElementById("username-input").value.trim();
+
+  if (newName.length < 3) {
+    alert("Username must be at least 3 characters.");
+    return;
+  }
+
+  const userRef = doc(db, "users", auth.currentUser.uid);
+
+  await setDoc(userRef, { displayName: newName });
+
+  document.getElementById("user-status").textContent =
+    "Logged in as: " + newName + (auth.currentUser.uid === ADMIN_UID ? " (admin)" : "");
+};
+  
 let currentRoom = "roomA";
 
 function getRoomRef() {
