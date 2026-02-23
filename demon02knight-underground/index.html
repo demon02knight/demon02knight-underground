@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>demon02knight underground</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>demon02knight</h1>
+
+<p>
+this is not a brand.<br>
+this is not content.<br>
+this is a quiet corner of the internet.
+</p>
+
+<hr>
+
+<h2>enter the underground</h2>
+
+<p id="user-status">Checking login status...</p>
+
+<input type="email" id="email" placeholder="email">
+<br><br>
+<input type="password" id="password" placeholder="password">
+<br><br>
+
+<button onclick="signup()">Sign Up</button>
+<button onclick="login()">Login</button>
+<button onclick="logout()">Logout</button>
+
+<hr>
+
+<p class="small">
+signal > noise<br>
+depth > velocity<br>
+presence > performance
+</p>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAyHfbHaJj4-ON0jPy1be7XLO5WUOFVRyE",
+    authDomain: "demon02knight-underground.firebaseapp.com",
+    projectId: "demon02knight-underground",
+    storageBucket: "demon02knight-underground.firebasestorage.app",
+    messagingSenderId: "446345417376",
+    appId: "1:446345417376:web:0457219bc40a8b0acf2fc5"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  console.log("Firebase + Auth initialized");
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      document.getElementById("user-status").textContent =
+        "Logged in as: " + user.email;
+    } else {
+      document.getElementById("user-status").textContent =
+        "Not logged in";
+    }
+  });
+
+  window.signup = async function() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert("Account created");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  window.login = async function() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert("Logged in");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  window.logout = async function() {
+    await signOut(auth);
+    alert("Logged out");
+  };
+</script>
+
+</body>
+</html>
