@@ -64,14 +64,17 @@ presence > performance
   console.log("Firebase + Auth initialized");
 
   onAuthStateChanged(auth, (user) => {
-    if (user) {
-      document.getElementById("user-status").textContent =
-        "Logged in as: " + user.email;
-    } else {
-      document.getElementById("user-status").textContent =
-        "Not logged in";
-    }
-  });
+  if (user) {
+    console.log("UID:", user.uid);
+    console.log("Logged in as:", user.email);
+
+    document.getElementById("user-status").textContent =
+      "Logged in as: " + user.email;
+  } else {
+    document.getElementById("user-status").textContent =
+      "Not logged in";
+  }
+});
 
   window.signup = async function() {
     const email = document.getElementById("email").value;
