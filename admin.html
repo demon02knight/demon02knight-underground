@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>admin panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>admin control panel</h1>
+
+<p id="admin-status">Checking permissions...</p>
+
+<hr>
+
+<h2>users</h2>
+<div id="users-list"></div>
+
+<hr>
+
+<h2>username registry</h2>
+<div id="username-list"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+  import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAyHfbHaJj4-ON0jPy1be7XLO5WUOFVRyE",
+    authDomain: "demon02knight-underground.firebaseapp.com",
+    projectId: "demon02knight-underground",
+    storageBucket: "demon02knight-underground.firebasestorage.app",
+    messagingSenderId: "446345417376",
+    appId: "1:446345417376:web:0457219bc40a8b0acf2fc5"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const ADMIN_UID = "rHpRdUEU0NbRui3qxmetIjQESuk1";
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user || user.uid !== ADMIN_UID) {
+      document.getElementById("admin-status").textContent = "Access denied.";
+      return;
+    }
+
+    document.getElementById("admin-status").textContent = "Admin verified.";
+
+    loadUsers();
+    loadUsernames();
+  });
+
+  async function loadUsers() {
+    const usersSnap = await getDocs(collection(db, "users"));
+    const container = document.getElementById("users-list");
+    container.innerHTML = "";
+
+    usersSnap.forEach((docSnap) => {
+      const data = docSnap.data();
+      const div = document.createElement("div");
+
+      div.innerHTML = `
+        <strong>UID:</strong> ${docSnap.id}<br>
+        <strong>Username:</strong> ${data.displayName || "none"}<br>
+        <strong>Locked:</strong> ${data.locked ? "yes" : "no"}<br>
+        <button data-uid="${docSnap.id}" class="unlock-btn">Unlock</button>
+        <hr>
+      `;
+
+      container.appendChild(div);
+    });
+
+    document.querySelectorAll(".unlock-btn").forEach(btn => {
+      btn.onclick = async () => {
+        const uid = btn.dataset.uid;
+        await updateDoc(doc(db, "users", uid), {
+          locked: false
+        });
+        alert("Username unlocked.");
+        loadUsers();
+      };
+    });
+  }
+
+  async function loadUsernames() {
+    const snap = await getDocs(collection(db, "usernames"));
+    const container = document.getElementById("username-list");
+    container.innerHTML = "";
+
+    snap.forEach((docSnap) => {
+      const data = docSnap.data();
+      const div = document.createElement("div");
+
+      div.innerHTML = `
+        <strong>${docSnap.id}</strong> → ${data.uid}
+        <button data-name="${docSnap.id}" class="delete-username">Delete</button>
+        <hr>
+      `;
+
+      container.appendChild(div);
+    });
+
+    document.querySelectorAll(".delete-username").forEach(btn => {
+      btn.onclick = async () => {
+        const name = btn.dataset.name;
+        await deleteDoc(doc(db, "usernames", name));
+        alert("Username reservation deleted.");
+        loadUsernames();
+      };
+    });
+  }
+</script>
+
+</body>
+</html>
