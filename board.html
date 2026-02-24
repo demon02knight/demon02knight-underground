@@ -18,8 +18,10 @@
 
 <hr>
 
-<input type="text" id="board-input" placeholder="leave something public...">
-<button onclick="postMessage()">Post</button>
+<div id="post-section">
+  <input type="text" id="board-input" placeholder="leave something public...">
+  <button onclick="postMessage()">Post</button>
+</div>
 
 <hr>
 
@@ -62,11 +64,22 @@
   let currentUser = null;
 
   onAuthStateChanged(auth, (user) => {
-    currentUser = user;
-    document.getElementById("login-status").textContent =
-      user ? "Logged in as: " + user.email : "Viewing as guest";
-  });
+  currentUser = user;
 
+  const postSection = document.getElementById("post-section");
+
+  if (user) {
+    document.getElementById("login-status").textContent =
+      "Logged in as: " + user.email;
+    postSection.style.display = "block";
+  } else {
+    document.getElementById("login-status").textContent =
+      "Viewing as guest (login required to post)";
+    postSection.style.display = "none";
+  }
+});
+
+  
   onSnapshot(q, (snapshot) => {
     const container = document.getElementById("board-box");
     container.innerHTML = "";
