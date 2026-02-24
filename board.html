@@ -20,6 +20,7 @@
 
 <div id="post-section">
   <input type="text" id="board-input" placeholder="leave something public...">
+  <input type="file" id="image-input">
   <button onclick="postMessage()">Post</button>
 </div>
 
@@ -40,8 +41,16 @@
     deleteDoc,
     doc,
     serverTimestamp,
-    getDoc
+    getDoc,
+    updateDoc
   } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+  import {
+    getStorage,
+    ref,
+    uploadBytes,
+    getDownloadURL
+  } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-storage.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAyHfbHaJj4-ON0jPy1be7XLO5WUOFVRyE",
@@ -57,29 +66,30 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  const storage = getStorage(app);
 
   const boardRef = collection(db, "publicBoard");
   const q = query(boardRef, orderBy("createdAt"));
 
   let currentUser = null;
 
+  // AUTH STATE
   onAuthStateChanged(auth, (user) => {
-  currentUser = user;
+    currentUser = user;
+    const postSection = document.getElementById("post-section");
 
-  const postSection = document.getElementById("post-section");
+    if (user) {
+      document.getElementById("login-status").textContent =
+        "Logged in as: " + user.email;
+      postSection.style.display = "block";
+    } else {
+      document.getElementById("login-status").textContent =
+        "Viewing as guest (login required to post)";
+      postSection.style.display = "none";
+    }
+  });
 
-  if (user) {
-    document.getElementById("login-status").textContent =
-      "Logged in as: " + user.email;
-    postSection.style.display = "block";
-  } else {
-    document.getElementById("login-status").textContent =
-      "Viewing as guest (login required to post)";
-    postSection.style.display = "none";
-  }
-});
-
-  
+  // LOAD BOARD MESSAGES
   onSnapshot(q, (snapshot) => {
     const container = document.getElementById("board-box");
     container.innerHTML = "";
@@ -89,20 +99,104 @@
       const div = document.createElement("div");
 
       const time = data.createdAt?.toDate();
-const formatted = time
-  ? time.toLocaleString()
-  : "just now";
+      const formatted = time ? time.toLocaleString() : "just now";
 
-div.innerHTML =
-  "<strong>" + data.displayName + "</strong> (" + formatted + ")<br>" +
-  data.text;
+      div.innerHTML =
+        "<strong>" + data.displayName + "</strong> (" + formatted + ")<br>" +
+        data.text;
 
+      // IMAGE DISPLAY
+      if (data.imageUrl) {
+        const img = document.createElement("img");
+        img.src = data.imageUrl;
+        img.style.maxWidth = "300px";
+        div.appendChild(document.createElement("br"));
+        div.appendChild(img);
+      }
+
+      // 👍 REACTION
+      const likeBtn = document.createElement("button");
+      likeBtn.textContent = "👍 " + (data.reactions?.like || 0);
+      likeBtn.onclick = async () => {
+        const newCount = (data.reactions?.like || 0) + 1;
+        await updateDoc(docSnap.ref, {
+          "reactions.like": newCount
+        });
+      };
+
+      div.appendChild(document.createElement("br"));
+      div.appendChild(likeBtn);
+
+      // REPLY BUTTON
+      const replyBtn = document.createElement("button");
+      replyBtn.textContent = "reply";
+
+      replyBtn.onclick = () => {
+        const input = document.createElement("input");
+        input.placeholder = "write reply...";
+
+        const send = document.createElement("button");
+        send.textContent = "send";
+
+        send.onclick = async () => {
+          if (!currentUser) return;
+
+          const userRef = doc(db, "users", currentUser.uid);
+          const userSnap = await getDoc(userRef);
+          const displayName = userSnap.exists()
+            ? userSnap.data().displayName
+            : "unknown";
+
+          await addDoc(
+            collection(docSnap.ref, "replies"),
+            {
+              text: input.value,
+              displayName: displayName,
+              uid: currentUser.uid,
+              createdAt: serverTimestamp()
+            }
+          );
+
+          input.remove();
+          send.remove();
+        };
+
+        div.appendChild(document.createElement("br"));
+        div.appendChild(input);
+        div.appendChild(send);
+      };
+
+      div.appendChild(replyBtn);
+
+      // LOAD REPLIES
+      const repliesRef = collection(docSnap.ref, "replies");
+      onSnapshot(query(repliesRef, orderBy("createdAt")), (replySnap) => {
+        replySnap.forEach(replyDoc => {
+          const r = replyDoc.data();
+          const replyDiv = document.createElement("div");
+          replyDiv.style.marginLeft = "20px";
+
+          const replyTime = r.createdAt?.toDate();
+          const replyFormatted = replyTime
+            ? replyTime.toLocaleString()
+            : "just now";
+
+          replyDiv.innerHTML =
+            "<strong>" + r.displayName + "</strong> (" + replyFormatted + ")<br>" +
+            r.text;
+
+          div.appendChild(replyDiv);
+        });
+      });
+
+      // ADMIN DELETE
       if (currentUser && currentUser.uid === ADMIN_UID) {
         const del = document.createElement("button");
         del.textContent = "delete";
         del.onclick = async () => {
           await deleteDoc(docSnap.ref);
         };
+        div.appendChild(document.createElement("br"));
         div.appendChild(del);
       }
 
@@ -111,33 +205,43 @@ div.innerHTML =
     });
   });
 
+  // POST MESSAGE
   window.postMessage = async function () {
-    if (!currentUser) {
-      alert("Login first.");
-      return;
-    }
+    if (!currentUser) return;
 
     const input = document.getElementById("board-input");
     const text = input.value.trim();
     if (!text) return;
 
+    const fileInput = document.getElementById("image-input");
+    const file = fileInput?.files[0];
+
+    let imageUrl = null;
+
+    if (file) {
+      const storageRef = ref(storage, "boardImages/" + Date.now());
+      await uploadBytes(storageRef, file);
+      imageUrl = await getDownloadURL(storageRef);
+    }
+
     const userRef = doc(db, "users", currentUser.uid);
     const userSnap = await getDoc(userRef);
-
     const displayName = userSnap.exists()
       ? userSnap.data().displayName
       : "unknown";
 
     await addDoc(boardRef, {
-      text: text,
-      displayName: displayName,
+      text,
+      displayName,
       uid: currentUser.uid,
+      imageUrl: imageUrl,
+      reactions: { like: 0 },
       createdAt: serverTimestamp()
     });
 
     input.value = "";
+    if (fileInput) fileInput.value = "";
   };
 </script>
-
 </body>
 </html>
