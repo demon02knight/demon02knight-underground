@@ -29,6 +29,9 @@ this is a quiet corner of the internet.
 <button onclick="signup()">Sign Up</button>
 <button onclick="login()">Login</button>
 <button onclick="logout()">Logout</button>
+
+  <a id="admin-link" href="admin.html" style="display:none;">admin panel</a>
+  
   <div id="username-section" style="display:none;">
   <input type="text" id="username-input" placeholder="choose a username">
   <button onclick="saveUsername()">Save</button>
@@ -102,11 +105,22 @@ presence > performance
 
   onAuthStateChanged(auth, async (user) => {
   const usernameSection = document.getElementById("username-section");
+  const adminLink = document.getElementById("admin-link");
 
   if (user) {
     const isAdmin = user.uid === ADMIN_UID;
+
+    // Show username section
     usernameSection.style.display = "block";
 
+    // Show or hide admin link properly
+    if (isAdmin) {
+      adminLink.style.display = "inline";
+    } else {
+      adminLink.style.display = "none";
+    }
+
+    // Fetch user profile
     const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
 
@@ -122,10 +136,14 @@ presence > performance
     document.getElementById("username-input").value = displayName || "";
 
     document.getElementById("user-status").textContent =
-      "Logged in as: " + (displayName || "no username") + (isAdmin ? " (admin)" : "");
+      "Logged in as: " +
+      (displayName || "no username") +
+      (isAdmin ? " (admin)" : "");
 
   } else {
+    // User logged out
     usernameSection.style.display = "none";
+    adminLink.style.display = "none";
     document.getElementById("user-status").textContent = "Not logged in";
   }
 });
