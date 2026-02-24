@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>public board</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>public board</h1>
+<p>a visible wall. no rooms. no hiding.</p>
+
+<hr>
+
+<p id="login-status">Checking login...</p>
+
+<div id="board-box"></div>
+
+<hr>
+
+<input type="text" id="board-input" placeholder="leave something public...">
+<button onclick="postMessage()">Post</button>
+
+<hr>
+
+<a href="index.html">← back to underground</a>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    onSnapshot,
+    query,
+    orderBy,
+    deleteDoc,
+    doc,
+    serverTimestamp,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAyHfbHaJj4-ON0jPy1be7XLO5WUOFVRyE",
+    authDomain: "demon02knight-underground.firebaseapp.com",
+    projectId: "demon02knight-underground",
+    storageBucket: "demon02knight-underground.firebasestorage.app",
+    messagingSenderId: "446345417376",
+    appId: "1:446345417376:web:0457219bc40a8b0acf2fc5"
+  };
+
+  const ADMIN_UID = "rHpRdUEU0NbRui3qxmetIjQESuk1";
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const boardRef = collection(db, "publicBoard");
+  const q = query(boardRef, orderBy("createdAt"));
+
+  let currentUser = null;
+
+  onAuthStateChanged(auth, (user) => {
+    currentUser = user;
+    document.getElementById("login-status").textContent =
+      user ? "Logged in as: " + user.email : "Viewing as guest";
+  });
+
+  onSnapshot(q, (snapshot) => {
+    const container = document.getElementById("board-box");
+    container.innerHTML = "";
+
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      const div = document.createElement("div");
+
+      div.innerHTML =
+        "<strong>" + data.displayName + ":</strong> " + data.text;
+
+      if (currentUser && currentUser.uid === ADMIN_UID) {
+        const del = document.createElement("button");
+        del.textContent = "delete";
+        del.onclick = async () => {
+          await deleteDoc(docSnap.ref);
+        };
+        div.appendChild(del);
+      }
+
+      container.appendChild(div);
+      container.appendChild(document.createElement("hr"));
+    });
+  });
+
+  window.postMessage = async function () {
+    if (!currentUser) {
+      alert("Login first.");
+      return;
+    }
+
+    const input = document.getElementById("board-input");
+    const text = input.value.trim();
+    if (!text) return;
+
+    const userRef = doc(db, "users", currentUser.uid);
+    const userSnap = await getDoc(userRef);
+
+    const displayName = userSnap.exists()
+      ? userSnap.data().displayName
+      : "unknown";
+
+    await addDoc(boardRef, {
+      text: text,
+      displayName: displayName,
+      uid: currentUser.uid,
+      createdAt: serverTimestamp()
+    });
+
+    input.value = "";
+  };
+</script>
+
+</body>
+</html>
