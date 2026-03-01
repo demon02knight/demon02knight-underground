@@ -1,10 +1,17 @@
+
 body {
-  background-color: #0d0d0d;
-  color: #e6e6e6;
+  margin: 0;
+  padding: 40px;
   font-family: monospace;
-  max-width: 720px;
-  margin: 60px auto;
-  line-height: 1.7;
+  color: #e0e0e0;
+
+  background: 
+    linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)),
+    url("background.png");
+
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 h1 {
@@ -43,17 +50,3 @@ button {
   cursor: pointer;
 }
 
-body {
-  margin: 0;
-  padding: 40px;
-  font-family: monospace;
-  color: #e0e0e0;
-
-  background: 
-    linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)),
-    url("background.png");
-
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-}
