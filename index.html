@@ -2,72 +2,95 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>demon02knight underground</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>demon02knight</h1>
+<h1>demon02knight underground</h1>
 
-<p>
-this is not a brand.<br>
-this is not content.<br>
-this is a quiet corner of the internet.
+<p class="tagline-header">
+  this is not a brand.<br>
+  this is not content.<br>
+  this is a quiet corner of the internet.
 </p>
 
 <hr>
 
-<h2>enter the underground</h2>
-
-<p id="user-status">Checking login status...</p>
-
-<input type="email" id="email" placeholder="email">
-<br><br>
-<input type="password" id="password" placeholder="password">
-<br><br>
-
-<button onclick="signup()">Sign Up</button>
-<button onclick="login()">Login</button>
-<button onclick="logout()">Logout</button>
-
-  <a id="admin-link" href="admin.html" style="display:none;">admin panel</a>
-  
-  <div id="username-section" style="display:none;">
-  <input type="text" id="username-input" placeholder="choose a username">
-  <button onclick="saveUsername()">Save</button>
+<!-- AUTH SECTION — visible when logged out -->
+<div id="auth-section">
+  <input type="email" id="email" placeholder="email">
+  <input type="password" id="password" placeholder="password">
+  <div class="auth-buttons">
+    <button onclick="signup()">sign up</button>
+    <button onclick="login()">login</button>
+    <button class="auth-google" disabled title="coming soon">sign in with google</button>
+  </div>
 </div>
 
-<hr>
-  
-<hr>
-<hr>
-<h2>rooms</h2>
+<!-- USER SECTION — visible when logged in -->
+<div id="user-section" style="display:none">
 
-<select id="room-select">
-  <option value="roomA">roomA</option>
-  <option value="roomB">roomB</option>
-  <option value="roomC">roomC</option>
-</select>
+  <p id="user-identity"></p>
 
-<div id="chat-box"></div>
+  <!-- USERNAME GATE — shown until a username is saved -->
+  <div id="username-gate" style="display:none">
+    <input type="text" id="username-input" placeholder="choose a name to enter">
+    <button onclick="saveUsername()">enter</button>
+  </div>
 
-<input type="text" id="message-input" placeholder="leave something behind...">
-<button onclick="sendMessage()">Send</button>
-<hr>
+  <!-- UNDERGROUND — revealed only after username is set -->
+  <div id="underground" style="display:none">
 
-  <hr>
-<p>
-  <a href="board.html">enter the public board →</a>
+    <div id="destinations">
+      <div class="destination" data-room="roomA" data-name="VALHALLA" data-desc="the hall of the honored dead">
+        <span class="dest-arrow"></span>
+        <span class="dest-name">VALHALLA</span>
+        <span class="dest-desc">the hall of the honored dead</span>
+      </div>
+      <div class="destination" data-room="roomB" data-name="ELYSIUM" data-desc="where wandering minds gather">
+        <span class="dest-arrow"></span>
+        <span class="dest-name">ELYSIUM</span>
+        <span class="dest-desc">where wandering minds gather</span>
+      </div>
+      <div class="destination" data-room="roomC" data-name="DUAT" data-desc="the passage between worlds">
+        <span class="dest-arrow"></span>
+        <span class="dest-name">DUAT</span>
+        <span class="dest-desc">the passage between worlds</span>
+      </div>
+    </div>
+
+    <!-- ROOM AREA — revealed when a destination is selected -->
+    <div id="room-area" style="display:none">
+      <hr>
+      <p class="room-name" id="room-name-display"></p>
+      <p class="room-desc" id="room-desc-display"></p>
+      <div id="chat-box"></div>
+      <div class="message-row">
+        <input type="text" id="message-input" placeholder="leave something behind...">
+        <button onclick="sendMessage()">send</button>
+      </div>
+    </div>
+
+    <hr>
+
+    <div id="site-nav">
+      <a href="board.html">the wall →</a>
+      <a href="admin.html" id="admin-link" style="display:none">admin ↗</a>
+      <button class="nav-logout" onclick="logout()">leave</button>
+    </div>
+
+  </div>
+
+</div>
+
+<p class="tagline-footer">
+  signal > noise<br>
+  depth > velocity<br>
+  presence > performance
 </p>
-<hr>
-  
-<p class="small">
-signal > noise<br>
-depth > velocity<br>
-presence > performance
-</p>
 
-<!-- Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
   import {
@@ -77,7 +100,6 @@ presence > performance
     signOut,
     onAuthStateChanged
   } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-
   import {
     getFirestore,
     collection,
@@ -92,7 +114,6 @@ presence > performance
     setDoc
   } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
-  
   const firebaseConfig = {
     apiKey: "AIzaSyAyHfbHaJj4-ON0jPy1be7XLO5WUOFVRyE",
     authDomain: "demon02knight-underground.firebaseapp.com",
@@ -104,203 +125,215 @@ presence > performance
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const db = getFirestore(app);
+  const db   = getFirestore(app);
   const ADMIN_UID = "rHpRdUEU0NbRui3qxmetIjQESuk1";
 
+  let currentRoom = null;
+  let unsubscribe = null;
+
+  // ── AUTH STATE ──────────────────────────────────────────────────
+
   onAuthStateChanged(auth, async (user) => {
-  const usernameSection = document.getElementById("username-section");
-  const adminLink = document.getElementById("admin-link");
+    const authSection  = document.getElementById("auth-section");
+    const userSection  = document.getElementById("user-section");
+    const usernameGate = document.getElementById("username-gate");
+    const underground  = document.getElementById("underground");
+    const userIdentity = document.getElementById("user-identity");
+    const adminLink    = document.getElementById("admin-link");
 
-  if (user) {
-    const isAdmin = user.uid === ADMIN_UID;
+    if (user) {
+      authSection.style.display = "none";
+      userSection.style.display = "block";
 
-    // Show username section
-    usernameSection.style.display = "block";
+      const isAdmin = user.uid === ADMIN_UID;
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
 
-    // Show or hide admin link properly
-    if (isAdmin) {
-      adminLink.style.display = "inline";
+      let displayName;
+      if (!userSnap.exists()) {
+        displayName = "";
+        await setDoc(userRef, { displayName: "" }, { merge: true });
+      } else {
+        displayName = userSnap.data().displayName;
+      }
+
+      if (displayName) {
+        userIdentity.textContent    = "known here as: " + displayName;
+        usernameGate.style.display  = "none";
+        underground.style.display   = "block";
+        adminLink.style.display     = isAdmin ? "inline" : "none";
+      } else {
+        userIdentity.textContent    = "you are unknown here";
+        usernameGate.style.display  = "block";
+        underground.style.display   = "none";
+        document.getElementById("username-input").value = "";
+      }
+
     } else {
-      adminLink.style.display = "none";
+      authSection.style.display = "block";
+      userSection.style.display = "none";
+
+      if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+      currentRoom = null;
+
+      document.getElementById("chat-box").innerHTML = "";
+      document.getElementById("room-area").style.display = "none";
+      document.querySelectorAll(".destination").forEach(d => {
+        d.classList.remove("active");
+        d.querySelector(".dest-arrow").textContent = "";
+      });
     }
+  });
 
-    // Fetch user profile
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
+  // ── DESTINATION SELECTION ───────────────────────────────────────
 
-    let displayName;
+  document.querySelectorAll(".destination").forEach(card => {
+    card.addEventListener("click", () => {
+      document.querySelectorAll(".destination").forEach(d => {
+        d.classList.remove("active");
+        d.querySelector(".dest-arrow").textContent = "";
+      });
+      card.classList.add("active");
+      card.querySelector(".dest-arrow").textContent = "→";
 
-    if (!userSnap.exists()) {
-      displayName = "";
-      await setDoc(userRef, { displayName: "" }, { merge: true });
-    } else {
-      displayName = userSnap.data().displayName;
-    }
+      currentRoom = card.dataset.room;
+      document.getElementById("room-name-display").textContent = card.dataset.name;
+      document.getElementById("room-desc-display").textContent = card.dataset.desc;
+      document.getElementById("room-area").style.display = "block";
 
-    document.getElementById("username-input").value = displayName || "";
+      loadMessages();
+    });
+  });
 
-    document.getElementById("user-status").textContent =
-      "Logged in as: " +
-      (displayName || "no username") +
-      (isAdmin ? " (admin)" : "");
+  // ── AUTH ACTIONS ────────────────────────────────────────────────
 
-    loadMessages();
-
-  } else {
-    // User logged out
-    usernameSection.style.display = "none";
-    adminLink.style.display = "none";
-    document.getElementById("user-status").textContent = "Not logged in";
-    if (unsubscribe) { unsubscribe(); unsubscribe = null; }
-    document.getElementById("chat-box").innerHTML = "";
-  }
-});
-    
-  window.signup = async function() {
-    const email = document.getElementById("email").value;
+  window.signup = async function () {
+    const email    = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      alert("Account created");
     } catch (error) {
       alert(error.message);
     }
   };
 
-  window.login = async function() {
-    const email = document.getElementById("email").value;
+  window.login = async function () {
+    const email    = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      alert("Logged in");
     } catch (error) {
       alert(error.message);
     }
   };
 
-  window.logout = async function() {
+  window.logout = async function () {
     await signOut(auth);
-    alert("Logged out");
   };
 
-window.saveUsername = async function () {
-  if (!auth.currentUser) return;
+  // ── USERNAME SAVE ───────────────────────────────────────────────
 
-  const newName = document.getElementById("username-input").value.trim().toLowerCase();
+  window.saveUsername = async function () {
+    if (!auth.currentUser) return;
 
-  if (newName.length < 3) {
-    alert("Username must be at least 3 characters.");
-    return;
-  }
+    const newName = document.getElementById("username-input").value.trim().toLowerCase();
 
-  const userRef = doc(db, "users", auth.currentUser.uid);
-  const userSnap = await getDoc(userRef);
-
-  // If locked and not admin → block
-  if (userSnap.exists() && userSnap.data().locked && auth.currentUser.uid !== ADMIN_UID) {
-    alert("Username is locked.");
-    return;
-  }
-
-  // Check if username already taken
-  const usernameRef = doc(db, "usernames", newName);
-  const usernameSnap = await getDoc(usernameRef);
-
-  if (usernameSnap.exists() && usernameSnap.data().uid !== auth.currentUser.uid) {
-    alert("Username already taken.");
-    return;
-  }
-
-  // Reserve username
-  await setDoc(usernameRef, {
-    uid: auth.currentUser.uid
-  });
-
-  // Save to user profile
-  await setDoc(userRef, {
-    displayName: newName,
-    locked: true
-  }, { merge: true });
-
-  document.getElementById("user-status").textContent =
-    "Logged in as: " + newName + (auth.currentUser.uid === ADMIN_UID ? " (admin)" : "");
-
-  alert("Username saved and locked.");
-};
-  
-let currentRoom = "roomA";
-
-function getRoomRef() {
-  return collection(db, "rooms", currentRoom, "messages");
-}
-
-  document.getElementById("room-select").addEventListener("change", (e) => {
-  currentRoom = e.target.value;
-  loadMessages();
-});
-
-let unsubscribe;
-
-function loadMessages() {
-  if (unsubscribe) unsubscribe();
-
-  const q = query(getRoomRef(), orderBy("createdAt"));
-
-  unsubscribe = onSnapshot(q, async (snapshot) => {
-    const chatBox = document.getElementById("chat-box");
-    chatBox.innerHTML = "";
-
-    for (const docSnap of snapshot.docs) {
-      const data = docSnap.data();
-
-      const messageDiv = document.createElement("div");
-      const senderEl = document.createElement("strong");
-      senderEl.textContent = data.displayName + ":";
-      messageDiv.appendChild(senderEl);
-      messageDiv.appendChild(document.createTextNode(" " + data.text));
-
-      if (auth.currentUser && auth.currentUser.uid === ADMIN_UID) {
-        const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "delete";
-        deleteBtn.onclick = async () => {
-          await deleteDoc(docSnap.ref);
-        };
-        messageDiv.appendChild(deleteBtn);
-      }
-
-      chatBox.appendChild(messageDiv);
+    if (newName.length < 3) {
+      alert("Username must be at least 3 characters.");
+      return;
     }
-  });
-}
-  
-window.sendMessage = async function () {
-  if (!auth.currentUser) {
-    alert("Login first.");
-    return;
+
+    const userRef  = doc(db, "users", auth.currentUser.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists() && userSnap.data().locked && auth.currentUser.uid !== ADMIN_UID) {
+      alert("Username is locked.");
+      return;
+    }
+
+    const usernameRef  = doc(db, "usernames", newName);
+    const usernameSnap = await getDoc(usernameRef);
+
+    if (usernameSnap.exists() && usernameSnap.data().uid !== auth.currentUser.uid) {
+      alert("Username already taken.");
+      return;
+    }
+
+    await setDoc(usernameRef, { uid: auth.currentUser.uid });
+    await setDoc(userRef, { displayName: newName, locked: true }, { merge: true });
+
+    const isAdmin = auth.currentUser.uid === ADMIN_UID;
+    document.getElementById("user-identity").textContent   = "known here as: " + newName;
+    document.getElementById("username-gate").style.display = "none";
+    document.getElementById("underground").style.display   = "block";
+    document.getElementById("admin-link").style.display    = isAdmin ? "inline" : "none";
+  };
+
+  // ── MESSAGES ────────────────────────────────────────────────────
+
+  function getRoomRef() {
+    return collection(db, "rooms", currentRoom, "messages");
   }
 
-  const input = document.getElementById("message-input");
-  const text = input.value;
-  if (text.trim() === "") return;
+  function loadMessages() {
+    if (unsubscribe) unsubscribe();
 
-  const userRef = doc(db, "users", auth.currentUser.uid);
-  const userSnap = await getDoc(userRef);
-  const displayName = userSnap.data()?.displayName;
+    const q = query(getRoomRef(), orderBy("createdAt"));
 
-  if (!displayName) {
-    alert("Set a username before posting.");
-    return;
+    unsubscribe = onSnapshot(q, (snapshot) => {
+      const chatBox = document.getElementById("chat-box");
+      chatBox.innerHTML = "";
+
+      snapshot.docs.forEach((docSnap) => {
+        const data = docSnap.data();
+
+        const messageDiv = document.createElement("div");
+        const senderEl   = document.createElement("strong");
+        senderEl.textContent = data.displayName + ":";
+        messageDiv.appendChild(senderEl);
+        messageDiv.appendChild(document.createTextNode(" " + data.text));
+
+        if (auth.currentUser && auth.currentUser.uid === ADMIN_UID) {
+          const del = document.createElement("button");
+          del.textContent = "×";
+          del.style.cssText = "margin-left:1.2rem;color:#2a2a2a;background:none;border:none;cursor:pointer;font-family:monospace;font-size:0.9em;padding:0;";
+          del.onmouseover = () => { del.style.color = "#666"; };
+          del.onmouseout  = () => { del.style.color = "#2a2a2a"; };
+          del.onclick = async () => { await deleteDoc(docSnap.ref); };
+          messageDiv.appendChild(del);
+        }
+
+        chatBox.appendChild(messageDiv);
+      });
+    });
   }
 
-  await addDoc(getRoomRef(), {
-    text: text,
-    displayName: displayName,
-    uid: auth.currentUser.uid,
-    createdAt: serverTimestamp()
-  });
+  window.sendMessage = async function () {
+    if (!auth.currentUser) { alert("Login first."); return; }
+    if (!currentRoom) return;
 
-  input.value = "";
-};
+    const input = document.getElementById("message-input");
+    const text  = input.value.trim();
+    if (!text) return;
+
+    const userRef  = doc(db, "users", auth.currentUser.uid);
+    const userSnap = await getDoc(userRef);
+    const displayName = userSnap.data()?.displayName;
+
+    if (!displayName) {
+      alert("Set a username before posting.");
+      return;
+    }
+
+    await addDoc(getRoomRef(), {
+      text,
+      displayName,
+      uid: auth.currentUser.uid,
+      createdAt: serverTimestamp()
+    });
+
+    input.value = "";
+  };
 
 </script>
 
