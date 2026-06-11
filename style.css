@@ -1,7 +1,7 @@
 
 html {
   background:
-    linear-gradient(rgba(0,0,0,0.87), rgba(0,0,0,0.87)),
+    linear-gradient(rgba(0,0,0,0.83), rgba(0,0,0,0.83)),
     url("background.png");
   background-size: cover;
   background-position: center;
@@ -11,18 +11,18 @@ html {
 
 body {
   margin: 0 auto;
-  padding: 60px 28px 80px;
-  max-width: 660px;
+  padding: 72px 32px 100px;
+  max-width: 640px;
   font-family: monospace;
   color: #e0e0e0;
 }
 
 h1 {
-  font-size: 1em;
+  font-size: 0.95em;
   font-weight: normal;
   letter-spacing: 3px;
-  color: #b8b8b8;
-  margin: 0 0 1.4rem 0;
+  color: #999;
+  margin: 0 0 2.8rem 0;
 }
 
 h2 {
@@ -34,19 +34,17 @@ h2 {
 }
 
 a {
-  color: #4a6a8a;
+  color: #345070;
   text-decoration: none;
   transition: color 0.1s;
 }
 
-a:hover {
-  color: #8ab4f8;
-}
+a:hover { color: #7aacf8; }
 
 hr {
   border: none;
   border-top: 1px solid #1a1a1a;
-  margin: 28px 0;
+  margin: 32px 0;
 }
 
 .small {
@@ -57,64 +55,119 @@ hr {
 /* ── inputs ── */
 
 input {
-  background: #0c0c0c;
+  background: #090909;
   color: #bbb;
   border: 1px solid #1e1e1e;
-  padding: 7px 9px;
+  padding: 9px 10px;
   font-family: monospace;
   font-size: 0.88em;
+  display: block;
+  width: 280px;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
-input::placeholder {
-  color: #2e2e2e;
-}
+input::placeholder { color: #282828; }
 
 /* ── buttons ── */
 
 button {
-  background: #0c0c0c;
-  color: #666;
+  background: #090909;
+  color: #555;
   border: 1px solid #1e1e1e;
-  padding: 7px 12px;
+  padding: 8px 14px;
   cursor: pointer;
   font-family: monospace;
   font-size: 0.88em;
   transition: color 0.1s, border-color 0.1s;
 }
 
-button:hover {
-  color: #aaa;
-  border-color: #2e2e2e;
+button:hover { color: #aaa; border-color: #333; }
+
+/* ── manifesto — the hero ── */
+
+.manifesto {
+  font-size: 1.05em;
+  line-height: 2.8;
+  color: #4a4a4a;
+  margin: 0 0 0 0;
+}
+
+/* ── enter threshold ── */
+
+#btn-enter {
+  display: block;
+  width: 280px;
+  max-width: 100%;
+  text-align: center;
+  padding: 11px 0;
+  font-size: 0.82em;
+  letter-spacing: 3px;
+  color: #333;
+  border-color: #1c1c1c;
+}
+
+#btn-enter:hover {
+  color: #888;
+  border-color: #3a3a3a;
 }
 
 /* ── auth section ── */
 
-#auth-section input {
-  display: block;
-  margin-bottom: 10px;
-  width: 256px;
+#auth-section input { margin-bottom: 10px; }
+
+.auth-primary { margin-bottom: 1.6rem; }
+
+#btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 280px;
   max-width: 100%;
+  padding: 12px 0;
+  color: #777;
+  border: 1px solid #242424;
+  font-size: 0.88em;
+  letter-spacing: 1px;
 }
 
-.auth-buttons {
+#btn-google:hover {
+  color: #ccc;
+  border-color: #444;
+}
+
+.auth-divider {
+  font-size: 0.68em;
+  color: #1e1e1e;
+  letter-spacing: 2px;
+  margin: 0 0 1rem 0;
+}
+
+.auth-btns {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
   margin-top: 4px;
 }
 
-.auth-google {
-  color: #252525 !important;
-  border-color: #161616 !important;
-  cursor: default !important;
+.auth-btns button {
+  font-size: 0.82em;
+  color: #333;
+  border-color: #1c1c1c;
+}
+
+.auth-btns button:hover {
+  color: #888;
+  border-color: #3a3a3a;
 }
 
 /* ── identity line ── */
 
 #user-identity {
-  font-size: 0.78em;
-  color: #333;
-  margin: 0 0 2rem 0;
+  font-size: 0.76em;
+  color: #2c2c2c;
+  margin: 0 0 2.4rem 0;
   letter-spacing: 1px;
 }
 
@@ -124,86 +177,87 @@ button:hover {
   margin-bottom: 0;
 }
 
-#username-gate input {
-  margin-right: 8px;
-  width: 220px;
+.gate-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
-/* ── destinations ── */
+.gate-row input {
+  width: 200px;
+  margin-bottom: 0;
+}
+
+/* ── destination cards ── */
 
 #destinations {
-  margin: 0.25rem 0 0.25rem 0;
+  margin: 0.25rem 0;
 }
 
-.destination {
-  display: flex;
-  align-items: baseline;
-  gap: 1.6rem;
-  padding: 7px 0;
+.dest-card {
+  border: 1px solid #131313;
+  padding: 1.8rem 2rem;
+  margin-bottom: 6px;
   cursor: pointer;
-  color: #252525;
-  transition: color 0.12s;
+  transition: border-color 0.12s, color 0.12s;
+  color: #1e1e1e;
   user-select: none;
-  line-height: 1.4;
 }
 
-.destination:hover {
-  color: #4a4a4a;
+.dest-card:hover {
+  border-color: #2e2e2e;
+  color: #555;
 }
 
-.destination.active {
-  color: #cccccc;
+.dest-card.active {
+  border-color: #444;
+  color: #c4c4c4;
 }
 
-.dest-arrow {
-  width: 1.2em;
-  font-size: 0.85em;
-  flex-shrink: 0;
-}
-
-.dest-name {
+.dest-card-name {
+  display: block;
+  font-size: 0.9em;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 0.82em;
-  min-width: 7rem;
-  flex-shrink: 0;
+  letter-spacing: 4px;
+  margin-bottom: 0.5rem;
 }
 
-.dest-desc {
-  font-size: 0.76em;
+.dest-card-desc {
+  display: block;
+  font-size: 0.72em;
   color: inherit;
 }
 
-/* ── active room ── */
+/* ── room area ── */
 
 .room-name {
   text-transform: uppercase;
   letter-spacing: 3px;
-  font-size: 0.82em;
+  font-size: 0.8em;
   font-weight: normal;
-  margin: 0 0 0.2rem 0;
-  color: #aaaaaa;
+  margin: 0 0 0.25rem 0;
+  color: #999;
 }
 
 .room-desc {
-  font-size: 0.74em;
-  color: #2e2e2e;
-  margin: 0 0 1.4rem 0;
+  font-size: 0.72em;
+  color: #252525;
+  margin: 0 0 1.6rem 0;
 }
 
 #chat-box {
   min-height: 2rem;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.4rem;
 }
 
 #chat-box div {
   font-size: 0.86em;
-  line-height: 1.75;
-  color: #888;
+  line-height: 1.85;
+  color: #666;
 }
 
 #chat-box strong {
-  color: #4a6888;
+  color: #36587c;
   font-weight: normal;
 }
 
@@ -214,7 +268,9 @@ button:hover {
 
 .message-row input {
   flex: 1;
-  max-width: 400px;
+  max-width: 380px;
+  margin-bottom: 0;
+  width: auto;
 }
 
 /* ── site navigation ── */
@@ -228,19 +284,16 @@ button:hover {
 }
 
 #admin-link {
-  color: #222 !important;
-  font-size: 0.9em;
-  letter-spacing: 0;
+  color: #1a1a1a !important;
+  font-size: 0.88em;
 }
 
-#admin-link:hover {
-  color: #444 !important;
-}
+#admin-link:hover { color: #383838 !important; }
 
 .nav-logout {
   background: none;
   border: none;
-  color: #222;
+  color: #1a1a1a;
   cursor: pointer;
   font-family: monospace;
   font-size: 1em;
@@ -248,20 +301,18 @@ button:hover {
   transition: color 0.12s;
 }
 
-.nav-logout:hover {
-  color: #555;
-}
+.nav-logout:hover { color: #555; }
 
 /* ── board page ── */
 
 #board-box div {
   font-size: 0.88em;
-  line-height: 1.7;
-  color: #888;
+  line-height: 1.75;
+  color: #666;
 }
 
 #board-box strong {
-  color: #4a6888;
+  color: #36587c;
   font-weight: normal;
 }
 
@@ -272,28 +323,37 @@ button:hover {
 
 #post-section input {
   flex: 1;
-  max-width: 400px;
+  max-width: 380px;
+  margin-bottom: 0;
+  width: auto;
 }
 
 #login-status {
-  font-size: 0.76em;
-  color: #2e2e2e;
+  font-size: 0.74em;
+  color: #2a2a2a;
   margin: 0 0 1.6rem 0;
   letter-spacing: 1px;
 }
 
 /* ── taglines ── */
 
-.tagline-header {
-  color: #333;
+.manifesto-small {
   font-size: 0.8em;
+  color: #333;
   line-height: 2.2;
   margin: 0 0 0 0;
 }
 
+.tagline-header {
+  color: #333;
+  font-size: 0.8em;
+  line-height: 2.2;
+  margin: 0;
+}
+
 .tagline-footer {
-  margin-top: 4rem;
-  font-size: 0.68em;
-  color: #1a1a1a;
-  line-height: 2.4;
+  margin-top: 5rem;
+  font-size: 0.66em;
+  color: #161616;
+  line-height: 2.6;
 }
