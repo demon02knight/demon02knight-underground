@@ -81,7 +81,12 @@
   });
 
   // LOAD BOARD MESSAGES
+  let replyUnsubs = [];
+
   onSnapshot(q, (snapshot) => {
+    replyUnsubs.forEach(fn => fn());
+    replyUnsubs = [];
+
     const container = document.getElementById("board-box");
     container.innerHTML = "";
 
@@ -154,7 +159,7 @@
       // LOAD REPLIES
       const repliesRef = collection(docSnap.ref, "replies");
 
-      onSnapshot(query(repliesRef, orderBy("createdAt")), (replySnap) => {
+      const replyUnsub = onSnapshot(query(repliesRef, orderBy("createdAt")), (replySnap) => {
         replySnap.forEach(replyDoc => {
           const r = replyDoc.data();
           const replyDiv = document.createElement("div");
@@ -173,6 +178,7 @@
           div.appendChild(replyDiv);
         });
       });
+      replyUnsubs.push(replyUnsub);
 
       // ADMIN DELETE
       if (currentUser && currentUser.uid === ADMIN_UID) {
