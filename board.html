@@ -2,13 +2,14 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>public board</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>the wall</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>public board</h1>
-<p>a visible wall. no rooms. no hiding.</p>
+<h1>the wall</h1>
+<p class="tagline-header">anything left here is visible to anyone.</p>
 
 <hr>
 
@@ -20,12 +21,12 @@
 
 <div id="post-section">
   <input type="text" id="board-input" placeholder="leave something public...">
-  <button onclick="submitPost()">Post</button>
+  <button onclick="submitPost()">post</button>
 </div>
 
 <hr>
 
-<a href="index.html">← back to underground</a>
+<a href="index.html">← underground</a>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
@@ -71,12 +72,10 @@
     const postSection = document.getElementById("post-section");
 
     if (user) {
-      document.getElementById("login-status").textContent =
-        "Logged in as: " + user.email;
+      document.getElementById("login-status").textContent = "you are here";
       postSection.style.display = "block";
     } else {
-      document.getElementById("login-status").textContent =
-        "Viewing as guest (login required to post)";
+      document.getElementById("login-status").textContent = "guests may read. login to leave a mark.";
       postSection.style.display = "none";
     }
   });
