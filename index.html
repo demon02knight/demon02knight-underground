@@ -134,7 +134,7 @@ presence > performance
 
     if (!userSnap.exists()) {
       displayName = "";
-      await setDoc(userRef, { displayName: "" });
+      await setDoc(userRef, { displayName: "" }, { merge: true });
     } else {
       displayName = userSnap.data().displayName;
     }
@@ -218,7 +218,7 @@ window.saveUsername = async function () {
   await setDoc(userRef, {
     displayName: newName,
     locked: true
-  });
+  }, { merge: true });
 
   document.getElementById("user-status").textContent =
     "Logged in as: " + newName + (auth.currentUser.uid === ADMIN_UID ? " (admin)" : "");
