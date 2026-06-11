@@ -79,18 +79,18 @@ presence > performance
   } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
   import {
-  getFirestore,
-  collection,
-  addDoc,
-  onSnapshot,
-  query,
-  orderBy,
-  deleteDoc,
-  doc,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
-
-  import { getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+    getFirestore,
+    collection,
+    addDoc,
+    onSnapshot,
+    query,
+    orderBy,
+    deleteDoc,
+    doc,
+    serverTimestamp,
+    getDoc,
+    setDoc
+  } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
   
   const firebaseConfig = {
@@ -106,8 +106,6 @@ presence > performance
   const auth = getAuth(app);
   const db = getFirestore(app);
   const ADMIN_UID = "rHpRdUEU0NbRui3qxmetIjQESuk1";
-
-  console.log("Firebase + Auth initialized");
 
   onAuthStateChanged(auth, async (user) => {
   const usernameSection = document.getElementById("username-section");
@@ -146,11 +144,15 @@ presence > performance
       (displayName || "no username") +
       (isAdmin ? " (admin)" : "");
 
+    loadMessages();
+
   } else {
     // User logged out
     usernameSection.style.display = "none";
     adminLink.style.display = "none";
     document.getElementById("user-status").textContent = "Not logged in";
+    if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+    document.getElementById("chat-box").innerHTML = "";
   }
 });
     
@@ -252,8 +254,10 @@ function loadMessages() {
       const data = docSnap.data();
 
       const messageDiv = document.createElement("div");
-      messageDiv.innerHTML =
-        "<strong>" + data.displayName + ":</strong> " + data.text;
+      const senderEl = document.createElement("strong");
+      senderEl.textContent = data.displayName + ":";
+      messageDiv.appendChild(senderEl);
+      messageDiv.appendChild(document.createTextNode(" " + data.text));
 
       if (auth.currentUser && auth.currentUser.uid === ADMIN_UID) {
         const deleteBtn = document.createElement("button");
@@ -281,7 +285,12 @@ window.sendMessage = async function () {
 
   const userRef = doc(db, "users", auth.currentUser.uid);
   const userSnap = await getDoc(userRef);
-  const displayName = userSnap.data().displayName;
+  const displayName = userSnap.data()?.displayName;
+
+  if (!displayName) {
+    alert("Set a username before posting.");
+    return;
+  }
 
   await addDoc(getRoomRef(), {
     text: text,
@@ -293,7 +302,6 @@ window.sendMessage = async function () {
   input.value = "";
 };
 
-  loadMessages();
 </script>
 
 </body>
