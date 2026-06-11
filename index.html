@@ -8,9 +8,11 @@
 </head>
 <body>
 
+<!-- TITLE — always visible -->
 <h1>demon02knight underground</h1>
 
-<p class="tagline-header">
+<!-- MANIFESTO — always visible, the hero -->
+<p class="manifesto">
   this is not a brand.<br>
   this is not content.<br>
   this is a quiet corner of the internet.
@@ -18,15 +20,36 @@
 
 <hr>
 
-<!-- AUTH SECTION — visible when logged out -->
-<div id="auth-section">
+<!-- LANDING — enter threshold, visible to visitors -->
+<div id="landing-section">
+  <button id="btn-enter" onclick="revealAuth()">enter</button>
+</div>
+
+<!-- AUTH SECTION — revealed after enter -->
+<div id="auth-section" style="display:none">
+
+  <div class="auth-primary">
+    <button id="btn-google" onclick="loginWithGoogle()">
+      <svg width="15" height="15" viewBox="0 0 18 18" aria-hidden="true">
+        <path fill="currentColor" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/>
+        <path fill="currentColor" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/>
+        <path fill="currentColor" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/>
+        <path fill="currentColor" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.31z"/>
+      </svg>
+      sign in with google
+    </button>
+  </div>
+
+  <p class="auth-divider">or continue with email</p>
+
   <input type="email" id="email" placeholder="email">
   <input type="password" id="password" placeholder="password">
-  <div class="auth-buttons">
+
+  <div class="auth-btns">
     <button onclick="signup()">sign up</button>
     <button onclick="login()">login</button>
-    <button class="auth-google" disabled title="coming soon">sign in with google</button>
   </div>
+
 </div>
 
 <!-- USER SECTION — visible when logged in -->
@@ -34,30 +57,29 @@
 
   <p id="user-identity"></p>
 
-  <!-- USERNAME GATE — shown until a username is saved -->
+  <!-- USERNAME GATE — blocks access until name is chosen -->
   <div id="username-gate" style="display:none">
-    <input type="text" id="username-input" placeholder="choose a name to enter">
-    <button onclick="saveUsername()">enter</button>
+    <div class="gate-row">
+      <input type="text" id="username-input" placeholder="choose a name to enter">
+      <button onclick="saveUsername()">enter</button>
+    </div>
   </div>
 
   <!-- UNDERGROUND — revealed only after username is set -->
   <div id="underground" style="display:none">
 
     <div id="destinations">
-      <div class="destination" data-room="roomA" data-name="VALHALLA" data-desc="the hall of the honored dead">
-        <span class="dest-arrow"></span>
-        <span class="dest-name">VALHALLA</span>
-        <span class="dest-desc">the hall of the honored dead</span>
+      <div class="dest-card" data-room="roomA" data-name="VALHALLA" data-desc="the hall of honored dead">
+        <span class="dest-card-name">VALHALLA</span>
+        <span class="dest-card-desc">the hall of honored dead</span>
       </div>
-      <div class="destination" data-room="roomB" data-name="ELYSIUM" data-desc="where wandering minds gather">
-        <span class="dest-arrow"></span>
-        <span class="dest-name">ELYSIUM</span>
-        <span class="dest-desc">where wandering minds gather</span>
+      <div class="dest-card" data-room="roomB" data-name="ELYSIUM" data-desc="where wandering minds gather">
+        <span class="dest-card-name">ELYSIUM</span>
+        <span class="dest-card-desc">where wandering minds gather</span>
       </div>
-      <div class="destination" data-room="roomC" data-name="DUAT" data-desc="the passage between worlds">
-        <span class="dest-arrow"></span>
-        <span class="dest-name">DUAT</span>
-        <span class="dest-desc">the passage between worlds</span>
+      <div class="dest-card" data-room="roomC" data-name="DUAT" data-desc="the passage between worlds">
+        <span class="dest-card-name">DUAT</span>
+        <span class="dest-card-desc">the passage between worlds</span>
       </div>
     </div>
 
@@ -65,7 +87,7 @@
     <div id="room-area" style="display:none">
       <hr>
       <p class="room-name" id="room-name-display"></p>
-      <p class="room-desc" id="room-desc-display"></p>
+      <p class="room-desc"  id="room-desc-display"></p>
       <div id="chat-box"></div>
       <div class="message-row">
         <input type="text" id="message-input" placeholder="leave something behind...">
@@ -97,6 +119,8 @@
     getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
+    signInWithPopup,
+    GoogleAuthProvider,
     signOut,
     onAuthStateChanged
   } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
@@ -123,30 +147,40 @@
     appId: "1:446345417376:web:0457219bc40a8b0acf2fc5"
   };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db   = getFirestore(app);
-  const ADMIN_UID = "rHpRdUEU0NbRui3qxmetIjQESuk1";
+  const app           = initializeApp(firebaseConfig);
+  const auth          = getAuth(app);
+  const db            = getFirestore(app);
+  const googleProvider = new GoogleAuthProvider();
+  const ADMIN_UID     = "rHpRdUEU0NbRui3qxmetIjQESuk1";
 
   let currentRoom = null;
   let unsubscribe = null;
 
-  // ── AUTH STATE ──────────────────────────────────────────────────
+  // ── ENTER THRESHOLD ──────────────────────────────────────────
+
+  window.revealAuth = function () {
+    document.getElementById("landing-section").style.display = "none";
+    document.getElementById("auth-section").style.display    = "block";
+  };
+
+  // ── AUTH STATE ──────────────────────────────────────────────
 
   onAuthStateChanged(auth, async (user) => {
-    const authSection  = document.getElementById("auth-section");
-    const userSection  = document.getElementById("user-section");
-    const usernameGate = document.getElementById("username-gate");
-    const underground  = document.getElementById("underground");
-    const userIdentity = document.getElementById("user-identity");
-    const adminLink    = document.getElementById("admin-link");
+    const landingSection = document.getElementById("landing-section");
+    const authSection    = document.getElementById("auth-section");
+    const userSection    = document.getElementById("user-section");
+    const usernameGate   = document.getElementById("username-gate");
+    const underground    = document.getElementById("underground");
+    const userIdentity   = document.getElementById("user-identity");
+    const adminLink      = document.getElementById("admin-link");
 
     if (user) {
-      authSection.style.display = "none";
-      userSection.style.display = "block";
+      landingSection.style.display = "none";
+      authSection.style.display    = "none";
+      userSection.style.display    = "block";
 
       const isAdmin = user.uid === ADMIN_UID;
-      const userRef = doc(db, "users", user.uid);
+      const userRef  = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
 
       let displayName;
@@ -158,43 +192,37 @@
       }
 
       if (displayName) {
-        userIdentity.textContent    = "known here as: " + displayName;
-        usernameGate.style.display  = "none";
-        underground.style.display   = "block";
-        adminLink.style.display     = isAdmin ? "inline" : "none";
+        userIdentity.textContent   = "known here as: " + displayName;
+        usernameGate.style.display = "none";
+        underground.style.display  = "block";
+        adminLink.style.display    = isAdmin ? "inline" : "none";
       } else {
-        userIdentity.textContent    = "you are unknown here";
-        usernameGate.style.display  = "block";
-        underground.style.display   = "none";
+        userIdentity.textContent   = "the underground does not know you yet";
+        usernameGate.style.display = "block";
+        underground.style.display  = "none";
         document.getElementById("username-input").value = "";
       }
 
     } else {
-      authSection.style.display = "block";
-      userSection.style.display = "none";
+      landingSection.style.display = "block";
+      authSection.style.display    = "none";
+      userSection.style.display    = "none";
 
       if (unsubscribe) { unsubscribe(); unsubscribe = null; }
       currentRoom = null;
 
       document.getElementById("chat-box").innerHTML = "";
       document.getElementById("room-area").style.display = "none";
-      document.querySelectorAll(".destination").forEach(d => {
-        d.classList.remove("active");
-        d.querySelector(".dest-arrow").textContent = "";
-      });
+      document.querySelectorAll(".dest-card").forEach(d => d.classList.remove("active"));
     }
   });
 
-  // ── DESTINATION SELECTION ───────────────────────────────────────
+  // ── DESTINATION SELECTION ───────────────────────────────────
 
-  document.querySelectorAll(".destination").forEach(card => {
+  document.querySelectorAll(".dest-card").forEach(card => {
     card.addEventListener("click", () => {
-      document.querySelectorAll(".destination").forEach(d => {
-        d.classList.remove("active");
-        d.querySelector(".dest-arrow").textContent = "";
-      });
+      document.querySelectorAll(".dest-card").forEach(d => d.classList.remove("active"));
       card.classList.add("active");
-      card.querySelector(".dest-arrow").textContent = "→";
 
       currentRoom = card.dataset.room;
       document.getElementById("room-name-display").textContent = card.dataset.name;
@@ -205,7 +233,17 @@
     });
   });
 
-  // ── AUTH ACTIONS ────────────────────────────────────────────────
+  // ── AUTH ACTIONS ────────────────────────────────────────────
+
+  window.loginWithGoogle = async function () {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      if (error.code !== "auth/popup-closed-by-user") {
+        alert(error.message);
+      }
+    }
+  };
 
   window.signup = async function () {
     const email    = document.getElementById("email").value;
@@ -231,7 +269,7 @@
     await signOut(auth);
   };
 
-  // ── USERNAME SAVE ───────────────────────────────────────────────
+  // ── USERNAME SAVE ───────────────────────────────────────────
 
   window.saveUsername = async function () {
     if (!auth.currentUser) return;
@@ -269,7 +307,7 @@
     document.getElementById("admin-link").style.display    = isAdmin ? "inline" : "none";
   };
 
-  // ── MESSAGES ────────────────────────────────────────────────────
+  // ── MESSAGES ────────────────────────────────────────────────
 
   function getRoomRef() {
     return collection(db, "rooms", currentRoom, "messages");
@@ -296,9 +334,9 @@
         if (auth.currentUser && auth.currentUser.uid === ADMIN_UID) {
           const del = document.createElement("button");
           del.textContent = "×";
-          del.style.cssText = "margin-left:1.2rem;color:#2a2a2a;background:none;border:none;cursor:pointer;font-family:monospace;font-size:0.9em;padding:0;";
+          del.style.cssText = "margin-left:1.2rem;color:#252525;background:none;border:none;cursor:pointer;font-family:monospace;font-size:0.9em;padding:0;";
           del.onmouseover = () => { del.style.color = "#666"; };
-          del.onmouseout  = () => { del.style.color = "#2a2a2a"; };
+          del.onmouseout  = () => { del.style.color = "#252525"; };
           del.onclick = async () => { await deleteDoc(docSnap.ref); };
           messageDiv.appendChild(del);
         }
