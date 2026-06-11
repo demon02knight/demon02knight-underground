@@ -1,52 +1,299 @@
 
-body {
-  margin: 0;
-  padding: 40px;
-  font-family: monospace;
-  color: #e0e0e0;
-
-  background: 
-    linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)),
+html {
+  background:
+    linear-gradient(rgba(0,0,0,0.87), rgba(0,0,0,0.87)),
     url("background.png");
-
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+  min-height: 100%;
+}
+
+body {
+  margin: 0 auto;
+  padding: 60px 28px 80px;
+  max-width: 660px;
+  font-family: monospace;
+  color: #e0e0e0;
 }
 
 h1 {
+  font-size: 1em;
+  font-weight: normal;
+  letter-spacing: 3px;
+  color: #b8b8b8;
+  margin: 0 0 1.4rem 0;
+}
+
+h2 {
+  font-size: 0.85em;
   font-weight: normal;
   letter-spacing: 2px;
+  color: #555;
+  margin: 0 0 1rem 0;
 }
 
 a {
-  color: #8ab4f8;
+  color: #4a6a8a;
   text-decoration: none;
+  transition: color 0.1s;
+}
+
+a:hover {
+  color: #8ab4f8;
 }
 
 hr {
   border: none;
-  border-top: 1px solid #222;
-  margin: 30px 0;
+  border-top: 1px solid #1a1a1a;
+  margin: 28px 0;
 }
 
 .small {
-  font-size: 0.8em;
+  font-size: 0.78em;
+  color: #555;
+}
+
+/* ── inputs ── */
+
+input {
+  background: #0c0c0c;
+  color: #bbb;
+  border: 1px solid #1e1e1e;
+  padding: 7px 9px;
+  font-family: monospace;
+  font-size: 0.88em;
+}
+
+input::placeholder {
+  color: #2e2e2e;
+}
+
+/* ── buttons ── */
+
+button {
+  background: #0c0c0c;
+  color: #666;
+  border: 1px solid #1e1e1e;
+  padding: 7px 12px;
+  cursor: pointer;
+  font-family: monospace;
+  font-size: 0.88em;
+  transition: color 0.1s, border-color 0.1s;
+}
+
+button:hover {
+  color: #aaa;
+  border-color: #2e2e2e;
+}
+
+/* ── auth section ── */
+
+#auth-section input {
+  display: block;
+  margin-bottom: 10px;
+  width: 256px;
+  max-width: 100%;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.auth-google {
+  color: #252525 !important;
+  border-color: #161616 !important;
+  cursor: default !important;
+}
+
+/* ── identity line ── */
+
+#user-identity {
+  font-size: 0.78em;
+  color: #333;
+  margin: 0 0 2rem 0;
+  letter-spacing: 1px;
+}
+
+/* ── username gate ── */
+
+#username-gate {
+  margin-bottom: 0;
+}
+
+#username-gate input {
+  margin-right: 8px;
+  width: 220px;
+}
+
+/* ── destinations ── */
+
+#destinations {
+  margin: 0.25rem 0 0.25rem 0;
+}
+
+.destination {
+  display: flex;
+  align-items: baseline;
+  gap: 1.6rem;
+  padding: 7px 0;
+  cursor: pointer;
+  color: #252525;
+  transition: color 0.12s;
+  user-select: none;
+  line-height: 1.4;
+}
+
+.destination:hover {
+  color: #4a4a4a;
+}
+
+.destination.active {
+  color: #cccccc;
+}
+
+.dest-arrow {
+  width: 1.2em;
+  font-size: 0.85em;
+  flex-shrink: 0;
+}
+
+.dest-name {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.82em;
+  min-width: 7rem;
+  flex-shrink: 0;
+}
+
+.dest-desc {
+  font-size: 0.76em;
+  color: inherit;
+}
+
+/* ── active room ── */
+
+.room-name {
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 0.82em;
+  font-weight: normal;
+  margin: 0 0 0.2rem 0;
+  color: #aaaaaa;
+}
+
+.room-desc {
+  font-size: 0.74em;
+  color: #2e2e2e;
+  margin: 0 0 1.4rem 0;
+}
+
+#chat-box {
+  min-height: 2rem;
+  margin-bottom: 1.2rem;
+}
+
+#chat-box div {
+  font-size: 0.86em;
+  line-height: 1.75;
   color: #888;
 }
 
-input {
-  background: #111;
-  color: #eee;
-  border: 1px solid #333;
-  padding: 6px;
+#chat-box strong {
+  color: #4a6888;
+  font-weight: normal;
 }
 
-button {
-  background: #111;
-  color: #eee;
-  border: 1px solid #333;
-  padding: 6px 10px;
+.message-row {
+  display: flex;
+  gap: 8px;
+}
+
+.message-row input {
+  flex: 1;
+  max-width: 400px;
+}
+
+/* ── site navigation ── */
+
+#site-nav {
+  display: flex;
+  gap: 2.5rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+  font-size: 0.8em;
+}
+
+#admin-link {
+  color: #222 !important;
+  font-size: 0.9em;
+  letter-spacing: 0;
+}
+
+#admin-link:hover {
+  color: #444 !important;
+}
+
+.nav-logout {
+  background: none;
+  border: none;
+  color: #222;
   cursor: pointer;
+  font-family: monospace;
+  font-size: 1em;
+  padding: 0;
+  transition: color 0.12s;
 }
 
+.nav-logout:hover {
+  color: #555;
+}
+
+/* ── board page ── */
+
+#board-box div {
+  font-size: 0.88em;
+  line-height: 1.7;
+  color: #888;
+}
+
+#board-box strong {
+  color: #4a6888;
+  font-weight: normal;
+}
+
+#post-section {
+  display: flex;
+  gap: 8px;
+}
+
+#post-section input {
+  flex: 1;
+  max-width: 400px;
+}
+
+#login-status {
+  font-size: 0.76em;
+  color: #2e2e2e;
+  margin: 0 0 1.6rem 0;
+  letter-spacing: 1px;
+}
+
+/* ── taglines ── */
+
+.tagline-header {
+  color: #333;
+  font-size: 0.8em;
+  line-height: 2.2;
+  margin: 0 0 0 0;
+}
+
+.tagline-footer {
+  margin-top: 4rem;
+  font-size: 0.68em;
+  color: #1a1a1a;
+  line-height: 2.4;
+}
