@@ -20,7 +20,7 @@
 
 <div id="post-section">
   <input type="text" id="board-input" placeholder="leave something public...">
-  <button onclick="postMessage()">Post</button>
+  <button onclick="submitPost()">Post</button>
 </div>
 
 <hr>
@@ -41,7 +41,8 @@
     doc,
     serverTimestamp,
     getDoc,
-    updateDoc
+    updateDoc,
+    increment
   } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -97,18 +98,20 @@
       const time = data.createdAt?.toDate();
       const formatted = time ? time.toLocaleString() : "just now";
 
-      div.innerHTML =
-        "<strong>" + data.displayName + "</strong> (" + formatted + ")<br>" +
-        data.text;
+      const nameEl = document.createElement("strong");
+      nameEl.textContent = data.displayName;
+      div.appendChild(nameEl);
+      div.appendChild(document.createTextNode(" (" + formatted + ")"));
+      div.appendChild(document.createElement("br"));
+      div.appendChild(document.createTextNode(data.text));
 
       // 👍 REACTION
       const likeBtn = document.createElement("button");
       likeBtn.textContent = "👍 " + (data.reactions?.like || 0);
 
       likeBtn.onclick = async () => {
-        const newCount = (data.reactions?.like || 0) + 1;
         await updateDoc(docSnap.ref, {
-          "reactions.like": newCount
+          "reactions.like": increment(1)
         });
       };
 
@@ -170,10 +173,12 @@
             ? replyTime.toLocaleString()
             : "just now";
 
-          replyDiv.innerHTML =
-            "<strong>" + r.displayName + "</strong> (" +
-            replyFormatted + ")<br>" +
-            r.text;
+          const rNameEl = document.createElement("strong");
+          rNameEl.textContent = r.displayName;
+          replyDiv.appendChild(rNameEl);
+          replyDiv.appendChild(document.createTextNode(" (" + replyFormatted + ")"));
+          replyDiv.appendChild(document.createElement("br"));
+          replyDiv.appendChild(document.createTextNode(r.text));
 
           div.appendChild(replyDiv);
         });
@@ -197,7 +202,7 @@
   });
 
   // POST MESSAGE
-  window.postMessage = async function () {
+  window.submitPost = async function () {
     if (!currentUser) return;
 
     const input = document.getElementById("board-input");
