@@ -62,13 +62,33 @@
       const data = docSnap.data();
       const div = document.createElement("div");
 
-      div.innerHTML = `
-        <strong>UID:</strong> ${docSnap.id}<br>
-        <strong>Username:</strong> ${data.displayName || "none"}<br>
-        <strong>Locked:</strong> ${data.locked ? "yes" : "no"}<br>
-        <button data-uid="${docSnap.id}" class="unlock-btn">Unlock</button>
-        <hr>
-      `;
+      const uidRow = document.createElement("div");
+      const uidLabel = document.createElement("strong");
+      uidLabel.textContent = "UID:";
+      uidRow.appendChild(uidLabel);
+      uidRow.appendChild(document.createTextNode(" " + docSnap.id));
+      div.appendChild(uidRow);
+
+      const nameRow = document.createElement("div");
+      const nameLabel = document.createElement("strong");
+      nameLabel.textContent = "Username:";
+      nameRow.appendChild(nameLabel);
+      nameRow.appendChild(document.createTextNode(" " + (data.displayName || "none")));
+      div.appendChild(nameRow);
+
+      const lockedRow = document.createElement("div");
+      const lockedLabel = document.createElement("strong");
+      lockedLabel.textContent = "Locked:";
+      lockedRow.appendChild(lockedLabel);
+      lockedRow.appendChild(document.createTextNode(" " + (data.locked ? "yes" : "no")));
+      div.appendChild(lockedRow);
+
+      const unlockBtn = document.createElement("button");
+      unlockBtn.textContent = "Unlock";
+      unlockBtn.dataset.uid = docSnap.id;
+      unlockBtn.className = "unlock-btn";
+      div.appendChild(unlockBtn);
+      div.appendChild(document.createElement("hr"));
 
       container.appendChild(div);
     });
@@ -94,11 +114,17 @@
       const data = docSnap.data();
       const div = document.createElement("div");
 
-      div.innerHTML = `
-        <strong>${docSnap.id}</strong> → ${data.uid}
-        <button data-name="${docSnap.id}" class="delete-username">Delete</button>
-        <hr>
-      `;
+      const usernameEl = document.createElement("strong");
+      usernameEl.textContent = docSnap.id;
+      div.appendChild(usernameEl);
+      div.appendChild(document.createTextNode(" → " + data.uid));
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Delete";
+      deleteBtn.dataset.name = docSnap.id;
+      deleteBtn.className = "delete-username";
+      div.appendChild(deleteBtn);
+      div.appendChild(document.createElement("hr"));
 
       container.appendChild(div);
     });
