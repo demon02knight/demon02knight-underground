@@ -499,3 +499,100 @@ body.board-page h2 {
 #admin-status { font-size: 0.82em; color: #7a7a7a; margin: 0 0 1rem 0; }
 
 #users-list div, #username-list div { font-size: 0.82em; color: #8a8a8a; line-height: 1.7; }
+
+/* ── RESPONSIVE ── */
+
+@media (max-width: 1100px) {
+  #site-header       { padding: 36px 40px 0; }
+  #destination-section { padding: 64px 40px 24px; }
+  .philosophy        { padding: 8px 40px 48px; }
+  .center-section    { padding: 72px 40px; }
+  #room-panel        { padding: 36px 40px; }
+  #wall-panel        { padding: 36px 28px; }
+}
+
+@media (max-width: 768px) {
+  #site-header {
+    padding: 28px 24px 0;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  #header-right {
+    align-items: flex-start;
+    flex: 1 0 100%;
+  }
+
+  #user-identity     { text-align: left; }
+  #identity-status   { justify-content: flex-start; }
+
+  .center-section    { padding: 48px 24px; max-width: 100%; }
+  #landing-section   { padding-top: 72px; }
+  #auth-section input { width: 100%; max-width: 280px; }
+  #btn-google        { width: 100%; max-width: 280px; }
+
+  #destination-section { padding: 48px 24px 16px; }
+  #dest-heading      { letter-spacing: 4px; }
+
+  #destinations {
+    flex-direction: column;
+    max-width: 420px;
+    gap: 8px;
+  }
+
+  .dest-card {
+    min-height: auto;
+    padding: 1.4rem 1.6rem;
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 1.4rem;
+    align-items: center;
+  }
+
+  .dest-icon         { font-size: 1.3em; flex-shrink: 0; }
+  .dest-card-desc    { text-align: left; }
+
+  .philosophy        { padding: 4px 24px 40px; }
+
+  #bottom-panels {
+    grid-template-columns: 1fr;
+  }
+
+  #wall-panel {
+    padding: 28px 24px;
+    border-right: none;
+    border-bottom: 1px solid #161616;
+  }
+
+  #room-panel        { padding: 28px 24px; }
+  .message-row       { max-width: 100%; }
+}
+
+@media (max-width: 480px) {
+  #site-header       { padding: 22px 18px 0; }
+  #header-left h1    { font-size: 0.88em; letter-spacing: 1px; }
+
+  .center-section    { padding: 40px 18px; }
+  #landing-section   { padding-top: 56px; }
+  #btn-enter         { width: 100%; }
+
+  #destination-section { padding: 36px 18px 12px; }
+
+  .dest-card {
+    padding: 1.1rem 1.2rem;
+    gap: 1rem;
+  }
+
+  .dest-card-name    { letter-spacing: 3px; }
+
+  #wall-panel        { padding: 24px 18px; }
+  #room-panel        { padding: 24px 18px; }
+
+  .room-panel-header {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .message-row button { padding: 12px 18px; }
+}
