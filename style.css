@@ -36,9 +36,9 @@ hr {
 
 input {
   display: block;
-  background: #090909;
-  color: #d0d0d0;
-  border: 1px solid #242424;
+  background: #0d0d0d;
+  color: #d8d8d8;
+  border: 1px solid #363636;
   padding: 9px 10px;
   font-family: monospace;
   font-size: 0.88em;
@@ -46,12 +46,12 @@ input {
   margin-bottom: 10px;
 }
 
-input::placeholder { color: #555; }
+input::placeholder { color: #6a6a6a; }
 
 button {
-  background: #090909;
-  color: #888;
-  border: 1px solid #242424;
+  background: #0d0d0d;
+  color: #a0a0a0;
+  border: 1px solid #363636;
   padding: 8px 14px;
   cursor: pointer;
   font-family: monospace;
@@ -59,7 +59,7 @@ button {
   transition: color 0.1s, border-color 0.1s;
 }
 
-button:hover { color: #d0d0d0; border-color: #444; }
+button:hover { color: #e0e0e0; border-color: #666; }
 
 /* ── HEADER ── */
 
@@ -74,13 +74,13 @@ button:hover { color: #d0d0d0; border-color: #444; }
   font-size: 1.0em;
   font-weight: normal;
   letter-spacing: 2px;
-  color: #c8c8c8;
+  color: #e8e8e8;
   margin: 0 0 0.5rem 0;
 }
 
 .site-tagline {
   font-size: 0.8em;
-  color: #5a5a5a;
+  color: #808080;
   margin: 0;
 }
 
@@ -93,19 +93,19 @@ button:hover { color: #d0d0d0; border-color: #444; }
 
 #user-identity {
   font-size: 0.82em;
-  color: #7a7a7a;
+  color: #9a9a9a;
   margin: 0;
   text-align: right;
 }
 
 #user-identity strong {
-  color: #e0e0e0;
+  color: #e8e8e8;
   font-weight: bold;
 }
 
 #identity-status {
   font-size: 0.72em;
-  color: #4a4a4a;
+  color: #6a6a6a;
   margin: 0;
   display: flex;
   align-items: center;
@@ -130,13 +130,13 @@ button:hover { color: #d0d0d0; border-color: #444; }
 
 #admin-link {
   font-size: 0.68em;
-  color: #2a2a2a !important;
+  color: #606060 !important;
   text-align: right;
   display: block;
   margin-top: 2px;
 }
 
-#admin-link:hover { color: #666 !important; }
+#admin-link:hover { color: #a0a0a0 !important; }
 
 /* ── CENTER SECTIONS (landing / auth / gate) ── */
 
@@ -156,13 +156,13 @@ button:hover { color: #d0d0d0; border-color: #444; }
   padding: 11px 0;
   font-size: 0.82em;
   letter-spacing: 3px;
-  color: #8a8a8a;
-  border-color: #2a2a2a;
+  color: #b0b0b0;
+  border-color: #444444;
   margin: 0;
-  background: #090909;
+  background: #0d0d0d;
 }
 
-#btn-enter:hover { color: #d0d0d0; border-color: #555; }
+#btn-enter:hover { color: #e8e8e8; border-color: #777; }
 
 /* ── AUTH SECTION ── */
 
@@ -175,19 +175,19 @@ button:hover { color: #d0d0d0; border-color: #444; }
   gap: 10px;
   width: 280px;
   padding: 12px 0;
-  color: #9a9a9a;
-  border: 1px solid #303030;
+  color: #b4b4b4;
+  border: 1px solid #484848;
   font-size: 0.88em;
   letter-spacing: 1px;
   margin: 0;
-  background: #090909;
+  background: #0d0d0d;
 }
 
-#btn-google:hover { color: #d8d8d8; border-color: #555; }
+#btn-google:hover { color: #e8e8e8; border-color: #777; }
 
 .auth-divider {
   font-size: 0.68em;
-  color: #4a4a4a;
+  color: #727272;
   letter-spacing: 2px;
   margin: 0 0 1rem 0;
 }
@@ -196,14 +196,14 @@ button:hover { color: #d0d0d0; border-color: #444; }
 
 .auth-btns { display: flex; gap: 8px; margin-top: 4px; }
 
-.auth-btns button { font-size: 0.82em; color: #888; border-color: #2a2a2a; }
-.auth-btns button:hover { color: #d0d0d0; border-color: #555; }
+.auth-btns button { font-size: 0.82em; color: #a8a8a8; border-color: #444444; }
+.auth-btns button:hover { color: #e8e8e8; border-color: #777; }
 
 /* ── USERNAME GATE ── */
 
 .gate-prompt {
   font-size: 0.76em;
-  color: #5a5a5a;
+  color: #888888;
   margin: 0 0 1.5rem 0;
   letter-spacing: 1px;
 }
@@ -220,13 +220,13 @@ button:hover { color: #d0d0d0; border-color: #444; }
 .gate-leave {
   margin-top: 2.5rem;
   font-size: 0.7em;
-  color: #2a2a2a;
+  color: #686868;
 }
 
 .leave-link {
   background: none;
   border: none;
-  color: #3a3a3a;
+  color: #707070;
   cursor: pointer;
   font-family: monospace;
   font-size: 1em;
@@ -234,7 +234,7 @@ button:hover { color: #d0d0d0; border-color: #444; }
   text-decoration: underline;
 }
 
-.leave-link:hover { color: #777; }
+.leave-link:hover { color: #aaaaaa; }
 
 /* ── DESTINATION SECTION ── */
 
@@ -247,7 +247,7 @@ button:hover { color: #d0d0d0; border-color: #444; }
   font-size: 0.76em;
   font-weight: normal;
   letter-spacing: 8px;
-  color: #5a5a5a;
+  color: #888888;
   margin: 0 0 3rem 0;
   text-transform: none;
 }
@@ -262,7 +262,7 @@ button:hover { color: #d0d0d0; border-color: #444; }
 
 .dest-card {
   flex: 1;
-  border: 1px solid #222;
+  border: 1px solid #333;
   padding: 2.8rem 1.5rem 2.4rem;
   cursor: pointer;
   display: flex;
@@ -276,55 +276,55 @@ button:hover { color: #d0d0d0; border-color: #444; }
 }
 
 .dest-card:hover {
-  border-color: #3a3a3a;
-  background: rgba(255,255,255,0.01);
+  border-color: #555;
+  background: rgba(255,255,255,0.02);
 }
 
 .dest-card.active {
-  border-color: #888;
-  background: rgba(255,255,255,0.03);
-  box-shadow: 0 0 28px rgba(255,255,255,0.03);
+  border-color: #b0b0b0;
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 32px rgba(255,255,255,0.05);
 }
 
 .dest-icon {
   display: block;
   font-size: 1.7em;
-  color: #2e2e2e;
+  color: #585858;
   line-height: 1;
   transition: color 0.15s;
 }
 
-.dest-card:hover .dest-icon { color: #555; }
-.dest-card.active .dest-icon { color: #a8a8a8; }
+.dest-card:hover .dest-icon { color: #909090; }
+.dest-card.active .dest-icon { color: #d8d8d8; }
 
 .dest-card-name {
   display: block;
   font-size: 0.8em;
   letter-spacing: 5px;
-  color: #444;
+  color: #707070;
   transition: color 0.15s;
 }
 
-.dest-card:hover .dest-card-name { color: #8a8a8a; }
-.dest-card.active .dest-card-name { color: #d8d8d8; }
+.dest-card:hover .dest-card-name { color: #c0c0c0; }
+.dest-card.active .dest-card-name { color: #f0f0f0; }
 
 .dest-card-desc {
   display: block;
   font-size: 0.68em;
-  color: #2e2e2e;
+  color: #585858;
   line-height: 1.8;
   transition: color 0.15s;
 }
 
-.dest-card:hover .dest-card-desc { color: #5a5a5a; }
-.dest-card.active .dest-card-desc { color: #5a5a5a; }
+.dest-card:hover .dest-card-desc { color: #888888; }
+.dest-card.active .dest-card-desc { color: #888888; }
 
 /* ── PHILOSOPHY ── */
 
 .philosophy {
   text-align: center;
   font-size: 0.6em;
-  color: #282828;
+  color: #606060;
   letter-spacing: 0.5px;
   padding: 8px 0 56px;
   margin: 0;
@@ -335,14 +335,14 @@ button:hover { color: #d0d0d0; border-color: #444; }
 #bottom-panels {
   display: grid;
   grid-template-columns: 220px 1fr;
-  border-top: 1px solid #161616;
+  border-top: 1px solid #282828;
   background: rgba(0,0,0,0.25);
   min-height: 260px;
 }
 
 #wall-panel {
   padding: 40px 36px;
-  border-right: 1px solid #161616;
+  border-right: 1px solid #282828;
 }
 
 .panel-title {
@@ -355,23 +355,23 @@ button:hover { color: #d0d0d0; border-color: #444; }
 
 .wall-desc {
   font-size: 0.72em;
-  color: #484848;
+  color: #787878;
   line-height: 2;
   margin: 0 0 2rem 0;
 }
 
 .wall-btn {
   display: inline-block;
-  border: 1px solid #252525;
+  border: 1px solid #444444;
   padding: 10px 18px;
   font-size: 0.74em;
-  color: #6a6a6a;
+  color: #909090;
   font-family: monospace;
   letter-spacing: 0.5px;
   transition: border-color 0.1s, color 0.1s;
 }
 
-.wall-btn:hover { border-color: #555; color: #d0d0d0; }
+.wall-btn:hover { border-color: #777; color: #e0e0e0; }
 
 #room-panel {
   padding: 40px 52px;
@@ -394,13 +394,13 @@ button:hover { color: #d0d0d0; border-color: #444; }
 
 #room-desc-display {
   font-size: 0.7em;
-  color: #454545;
+  color: #787878;
   margin: 0;
 }
 
 #room-presence {
   font-size: 0.64em;
-  color: #2a2a2a;
+  color: #7a7a7a;
   margin: 0;
   white-space: nowrap;
 }
@@ -413,11 +413,11 @@ button:hover { color: #d0d0d0; border-color: #444; }
 #chat-box div {
   font-size: 0.82em;
   line-height: 1.9;
-  color: #8a8a8a;
+  color: #b0b0b0;
 }
 
 #chat-box strong {
-  color: #4a78a8;
+  color: #7aace8;
   font-weight: normal;
 }
 
@@ -428,7 +428,7 @@ button:hover { color: #d0d0d0; border-color: #444; }
 
 .message-row input {
   flex: 1;
-  border: 1px solid #222;
+  border: 1px solid #383838;
   border-right: none;
   padding: 12px 16px;
   font-size: 0.82em;
@@ -437,24 +437,24 @@ button:hover { color: #d0d0d0; border-color: #444; }
 }
 
 .message-row button {
-  border: 1px solid #222;
-  background: #141414;
+  border: 1px solid #383838;
+  background: #181818;
   padding: 12px 28px;
   font-size: 0.82em;
-  color: #888;
+  color: #a8a8a8;
   letter-spacing: 1px;
   flex-shrink: 0;
 }
 
 .message-row button:hover {
-  color: #d0d0d0;
-  border-color: #444;
-  background: #1c1c1c;
+  color: #e0e0e0;
+  border-color: #666;
+  background: #222222;
 }
 
 .room-auth-note {
   font-size: 0.63em;
-  color: #252525;
+  color: #686868;
   margin: 0.75rem 0 0;
 }
 
@@ -485,13 +485,13 @@ body.board-page h2 {
 
 .small { font-size: 0.78em; color: #888; }
 
-#board-box div { font-size: 0.88em; line-height: 1.75; color: #9a9a9a; }
-#board-box strong { color: #5080b0; font-weight: normal; }
+#board-box div { font-size: 0.88em; line-height: 1.75; color: #b8b8b8; }
+#board-box strong { color: #7aace8; font-weight: normal; }
 
 #post-section { display: flex; gap: 8px; }
 #post-section input { flex: 1; max-width: 380px; margin-bottom: 0; width: auto; }
 
-#login-status { font-size: 0.74em; color: #7a7a7a; margin: 0 0 1.6rem 0; letter-spacing: 1px; }
+#login-status { font-size: 0.74em; color: #9a9a9a; margin: 0 0 1.6rem 0; letter-spacing: 1px; }
 
 .tagline-header { color: #666; font-size: 0.8em; line-height: 2.2; margin: 0; }
 .manifesto-small { font-size: 0.8em; color: #666; line-height: 2.2; margin: 0; }
@@ -562,7 +562,7 @@ body.board-page h2 {
   #wall-panel {
     padding: 28px 24px;
     border-right: none;
-    border-bottom: 1px solid #161616;
+    border-bottom: 1px solid #282828;
   }
 
   #room-panel        { padding: 28px 24px; }
