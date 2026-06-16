@@ -63,6 +63,7 @@
       <input type="text" id="username-input" placeholder="choose a name to enter">
       <button onclick="saveUsername()">enter</button>
     </div>
+    <p id="gate-error" class="field-error" style="display:none"></p>
   </div>
 
   <!-- UNDERGROUND — revealed only after username is set -->
@@ -272,39 +273,60 @@
   // ── USERNAME SAVE ───────────────────────────────────────────
 
   window.saveUsername = async function () {
-    if (!auth.currentUser) return;
+    const gateError = document.getElementById("gate-error");
+
+    function showGateError(msg) {
+      gateError.textContent    = msg;
+      gateError.style.display  = "block";
+    }
+
+    gateError.style.display = "none";
+
+    if (!auth.currentUser) {
+      showGateError("not authenticated — try refreshing");
+      return;
+    }
 
     const newName = document.getElementById("username-input").value.trim().toLowerCase();
 
     if (newName.length < 3) {
-      alert("Username must be at least 3 characters.");
+      showGateError("name must be at least 3 characters");
       return;
     }
 
-    const userRef  = doc(db, "users", auth.currentUser.uid);
-    const userSnap = await getDoc(userRef);
+    try {
+      const userRef  = doc(db, "users", auth.currentUser.uid);
+      const userSnap = await getDoc(userRef);
 
-    if (userSnap.exists() && userSnap.data().locked && auth.currentUser.uid !== ADMIN_UID) {
-      alert("Username is locked.");
-      return;
+      if (userSnap.exists() && userSnap.data().locked && auth.currentUser.uid !== ADMIN_UID) {
+        showGateError("name is locked — contact admin to change it");
+        return;
+      }
+
+      const usernameRef  = doc(db, "usernames", newName);
+      const usernameSnap = await getDoc(usernameRef);
+
+      if (usernameSnap.exists() && usernameSnap.data().uid !== auth.currentUser.uid) {
+        showGateError("that name is already taken");
+        return;
+      }
+
+      // Only write to username registry if not already claimed by this user
+      if (!usernameSnap.exists()) {
+        await setDoc(usernameRef, { uid: auth.currentUser.uid });
+      }
+      await setDoc(userRef, { displayName: newName, locked: true }, { merge: true });
+
+      const isAdmin = auth.currentUser.uid === ADMIN_UID;
+      document.getElementById("user-identity").textContent   = "known here as: " + newName;
+      document.getElementById("username-gate").style.display = "none";
+      document.getElementById("underground").style.display   = "block";
+      document.getElementById("admin-link").style.display    = isAdmin ? "inline" : "none";
+
+    } catch (err) {
+      console.error("saveUsername failed:", err);
+      showGateError(err.message || "something went wrong — check console");
     }
-
-    const usernameRef  = doc(db, "usernames", newName);
-    const usernameSnap = await getDoc(usernameRef);
-
-    if (usernameSnap.exists() && usernameSnap.data().uid !== auth.currentUser.uid) {
-      alert("Username already taken.");
-      return;
-    }
-
-    await setDoc(usernameRef, { uid: auth.currentUser.uid });
-    await setDoc(userRef, { displayName: newName, locked: true }, { merge: true });
-
-    const isAdmin = auth.currentUser.uid === ADMIN_UID;
-    document.getElementById("user-identity").textContent   = "known here as: " + newName;
-    document.getElementById("username-gate").style.display = "none";
-    document.getElementById("underground").style.display   = "block";
-    document.getElementById("admin-link").style.display    = isAdmin ? "inline" : "none";
   };
 
   // ── MESSAGES ────────────────────────────────────────────────

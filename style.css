@@ -21,7 +21,7 @@ h1 {
   font-size: 0.95em;
   font-weight: normal;
   letter-spacing: 3px;
-  color: #999;
+  color: #c0c0c0;
   margin: 0 0 2.8rem 0;
 }
 
@@ -29,17 +29,17 @@ h2 {
   font-size: 0.85em;
   font-weight: normal;
   letter-spacing: 2px;
-  color: #555;
+  color: #888;
   margin: 0 0 1rem 0;
 }
 
 a {
-  color: #345070;
+  color: #4a7aaa;
   text-decoration: none;
   transition: color 0.1s;
 }
 
-a:hover { color: #7aacf8; }
+a:hover { color: #8ab4f8; }
 
 hr {
   border: none;
@@ -49,15 +49,15 @@ hr {
 
 .small {
   font-size: 0.78em;
-  color: #555;
+  color: #888;
 }
 
 /* ── inputs ── */
 
 input {
   background: #090909;
-  color: #bbb;
-  border: 1px solid #1e1e1e;
+  color: #d0d0d0;
+  border: 1px solid #242424;
   padding: 9px 10px;
   font-family: monospace;
   font-size: 0.88em;
@@ -68,14 +68,14 @@ input {
   margin-bottom: 10px;
 }
 
-input::placeholder { color: #282828; }
+input::placeholder { color: #555; }
 
 /* ── buttons ── */
 
 button {
   background: #090909;
-  color: #555;
-  border: 1px solid #1e1e1e;
+  color: #888;
+  border: 1px solid #242424;
   padding: 8px 14px;
   cursor: pointer;
   font-family: monospace;
@@ -83,14 +83,14 @@ button {
   transition: color 0.1s, border-color 0.1s;
 }
 
-button:hover { color: #aaa; border-color: #333; }
+button:hover { color: #d0d0d0; border-color: #444; }
 
 /* ── manifesto — the hero ── */
 
 .manifesto {
   font-size: 1.05em;
   line-height: 2.8;
-  color: #4a4a4a;
+  color: #8a8a8a;
   margin: 0 0 0 0;
 }
 
@@ -104,13 +104,13 @@ button:hover { color: #aaa; border-color: #333; }
   padding: 11px 0;
   font-size: 0.82em;
   letter-spacing: 3px;
-  color: #333;
-  border-color: #1c1c1c;
+  color: #8a8a8a;
+  border-color: #2a2a2a;
 }
 
 #btn-enter:hover {
-  color: #888;
-  border-color: #3a3a3a;
+  color: #d0d0d0;
+  border-color: #555;
 }
 
 /* ── auth section ── */
@@ -127,20 +127,20 @@ button:hover { color: #aaa; border-color: #333; }
   width: 280px;
   max-width: 100%;
   padding: 12px 0;
-  color: #777;
-  border: 1px solid #242424;
+  color: #9a9a9a;
+  border: 1px solid #303030;
   font-size: 0.88em;
   letter-spacing: 1px;
 }
 
 #btn-google:hover {
-  color: #ccc;
-  border-color: #444;
+  color: #d8d8d8;
+  border-color: #555;
 }
 
 .auth-divider {
   font-size: 0.68em;
-  color: #1e1e1e;
+  color: #4a4a4a;
   letter-spacing: 2px;
   margin: 0 0 1rem 0;
 }
@@ -153,20 +153,20 @@ button:hover { color: #aaa; border-color: #333; }
 
 .auth-btns button {
   font-size: 0.82em;
-  color: #333;
-  border-color: #1c1c1c;
+  color: #888;
+  border-color: #2a2a2a;
 }
 
 .auth-btns button:hover {
-  color: #888;
-  border-color: #3a3a3a;
+  color: #d0d0d0;
+  border-color: #555;
 }
 
 /* ── identity line ── */
 
 #user-identity {
   font-size: 0.76em;
-  color: #2c2c2c;
+  color: #8a8a8a;
   margin: 0 0 2.4rem 0;
   letter-spacing: 1px;
 }
@@ -195,23 +195,23 @@ button:hover { color: #aaa; border-color: #333; }
 }
 
 .dest-card {
-  border: 1px solid #131313;
+  border: 1px solid #1e1e1e;
   padding: 1.8rem 2rem;
   margin-bottom: 6px;
   cursor: pointer;
   transition: border-color 0.12s, color 0.12s;
-  color: #1e1e1e;
+  color: #555;
   user-select: none;
 }
 
 .dest-card:hover {
-  border-color: #2e2e2e;
-  color: #555;
+  border-color: #333;
+  color: #a0a0a0;
 }
 
 .dest-card.active {
-  border-color: #444;
-  color: #c4c4c4;
+  border-color: #555;
+  color: #e0e0e0;
 }
 
 .dest-card-name {
@@ -236,12 +236,12 @@ button:hover { color: #aaa; border-color: #333; }
   font-size: 0.8em;
   font-weight: normal;
   margin: 0 0 0.25rem 0;
-  color: #999;
+  color: #b8b8b8;
 }
 
 .room-desc {
   font-size: 0.72em;
-  color: #252525;
+  color: #5a5a5a;
   margin: 0 0 1.6rem 0;
 }
 
@@ -253,11 +253,11 @@ button:hover { color: #aaa; border-color: #333; }
 #chat-box div {
   font-size: 0.86em;
   line-height: 1.85;
-  color: #666;
+  color: #9a9a9a;
 }
 
 #chat-box strong {
-  color: #36587c;
+  color: #5080b0;
   font-weight: normal;
 }
 
@@ -284,16 +284,16 @@ button:hover { color: #aaa; border-color: #333; }
 }
 
 #admin-link {
-  color: #1a1a1a !important;
+  color: #3a3a3a !important;
   font-size: 0.88em;
 }
 
-#admin-link:hover { color: #383838 !important; }
+#admin-link:hover { color: #777 !important; }
 
 .nav-logout {
   background: none;
   border: none;
-  color: #1a1a1a;
+  color: #6a6a6a;
   cursor: pointer;
   font-family: monospace;
   font-size: 1em;
@@ -301,18 +301,18 @@ button:hover { color: #aaa; border-color: #333; }
   transition: color 0.12s;
 }
 
-.nav-logout:hover { color: #555; }
+.nav-logout:hover { color: #aaa; }
 
 /* ── board page ── */
 
 #board-box div {
   font-size: 0.88em;
   line-height: 1.75;
-  color: #666;
+  color: #9a9a9a;
 }
 
 #board-box strong {
-  color: #36587c;
+  color: #5080b0;
   font-weight: normal;
 }
 
@@ -330,7 +330,7 @@ button:hover { color: #aaa; border-color: #333; }
 
 #login-status {
   font-size: 0.74em;
-  color: #2a2a2a;
+  color: #7a7a7a;
   margin: 0 0 1.6rem 0;
   letter-spacing: 1px;
 }
@@ -339,13 +339,13 @@ button:hover { color: #aaa; border-color: #333; }
 
 .manifesto-small {
   font-size: 0.8em;
-  color: #333;
+  color: #666;
   line-height: 2.2;
   margin: 0 0 0 0;
 }
 
 .tagline-header {
-  color: #333;
+  color: #666;
   font-size: 0.8em;
   line-height: 2.2;
   margin: 0;
@@ -354,6 +354,15 @@ button:hover { color: #aaa; border-color: #333; }
 .tagline-footer {
   margin-top: 5rem;
   font-size: 0.66em;
-  color: #161616;
+  color: #383838;
   line-height: 2.6;
+}
+
+/* ── inline error messages ── */
+
+.field-error {
+  font-size: 0.72em;
+  color: #8a4a4a;
+  margin: 0.7rem 0 0 0;
+  letter-spacing: 0.5px;
 }
