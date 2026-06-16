@@ -108,6 +108,7 @@
 
     <!-- RIGHT: Active Room -->
     <div id="room-panel">
+      <p id="room-placeholder" class="room-placeholder">select a destination above</p>
       <div id="room-area" style="display:none">
         <div class="room-panel-header">
           <div>
@@ -230,6 +231,7 @@
       currentRoom = null;
 
       document.getElementById("chat-box").innerHTML = "";
+      document.getElementById("room-placeholder").style.display = "block";
       document.getElementById("room-area").style.display = "none";
       document.querySelectorAll(".dest-card").forEach(d => d.classList.remove("active"));
     }
@@ -245,6 +247,7 @@
       currentRoom = card.dataset.room;
       document.getElementById("room-name-display").textContent = card.dataset.name.toLowerCase();
       document.getElementById("room-desc-display").textContent = card.dataset.desc;
+      document.getElementById("room-placeholder").style.display = "none";
       document.getElementById("room-area").style.display = "block";
 
       loadMessages();

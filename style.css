@@ -26,6 +26,11 @@ a {
 
 a:hover { color: #8ab4f8; }
 
+:focus-visible {
+  outline: 1px solid #666;
+  outline-offset: 3px;
+}
+
 hr {
   border: none;
   border-top: 1px solid #1a1a1a;
@@ -118,15 +123,17 @@ button:hover { color: #e0e0e0; border-color: #666; }
 .leave-btn {
   background: none;
   border: none;
-  color: inherit;
+  color: #8a8a8a;
   cursor: pointer;
   font-family: monospace;
   font-size: 1em;
   padding: 0;
   transition: color 0.1s;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
-.leave-btn:hover { color: #8a8a8a; }
+.leave-btn:hover { color: #d0d0d0; }
 
 #admin-link {
   font-size: 0.68em;
@@ -289,7 +296,7 @@ button:hover { color: #e0e0e0; border-color: #666; }
 .dest-icon {
   display: block;
   font-size: 1.7em;
-  color: #585858;
+  color: #747474;
   line-height: 1;
   transition: color 0.15s;
 }
@@ -407,7 +414,11 @@ button:hover { color: #e0e0e0; border-color: #666; }
 
 #chat-box {
   min-height: 32px;
+  max-height: 180px;
+  overflow-y: auto;
   margin-bottom: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: #333 transparent;
 }
 
 #chat-box div {
@@ -456,6 +467,14 @@ button:hover { color: #e0e0e0; border-color: #666; }
   font-size: 0.63em;
   color: #686868;
   margin: 0.75rem 0 0;
+}
+
+.room-placeholder {
+  font-size: 0.7em;
+  color: #444;
+  padding: 40px 52px;
+  margin: 0;
+  letter-spacing: 0.5px;
 }
 
 /* ── BOARD / ADMIN PAGES ── */
