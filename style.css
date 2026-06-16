@@ -1,4 +1,6 @@
 
+/* ── BASE ── */
+
 html {
   background:
     linear-gradient(rgba(0,0,0,0.83), rgba(0,0,0,0.83)),
@@ -10,27 +12,10 @@ html {
 }
 
 body {
-  margin: 0 auto;
-  padding: 72px 32px 100px;
-  max-width: 640px;
+  margin: 0;
+  padding: 0;
   font-family: monospace;
   color: #e0e0e0;
-}
-
-h1 {
-  font-size: 0.95em;
-  font-weight: normal;
-  letter-spacing: 3px;
-  color: #c0c0c0;
-  margin: 0 0 2.8rem 0;
-}
-
-h2 {
-  font-size: 0.85em;
-  font-weight: normal;
-  letter-spacing: 2px;
-  color: #888;
-  margin: 0 0 1rem 0;
 }
 
 a {
@@ -44,33 +29,24 @@ a:hover { color: #8ab4f8; }
 hr {
   border: none;
   border-top: 1px solid #1a1a1a;
-  margin: 32px 0;
+  margin: 24px 0;
 }
 
-.small {
-  font-size: 0.78em;
-  color: #888;
-}
-
-/* ── inputs ── */
+/* ── FORM ELEMENTS ── */
 
 input {
+  display: block;
   background: #090909;
   color: #d0d0d0;
   border: 1px solid #242424;
   padding: 9px 10px;
   font-family: monospace;
   font-size: 0.88em;
-  display: block;
-  width: 280px;
-  max-width: 100%;
   box-sizing: border-box;
   margin-bottom: 10px;
 }
 
 input::placeholder { color: #555; }
-
-/* ── buttons ── */
 
 button {
   background: #090909;
@@ -85,37 +61,110 @@ button {
 
 button:hover { color: #d0d0d0; border-color: #444; }
 
-/* ── manifesto — the hero ── */
+/* ── HEADER ── */
 
-.manifesto {
-  font-size: 1.05em;
-  line-height: 2.8;
-  color: #8a8a8a;
-  margin: 0 0 0 0;
+#site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 48px 64px 0;
 }
 
-/* ── enter threshold ── */
+#header-left h1 {
+  font-size: 1.0em;
+  font-weight: normal;
+  letter-spacing: 2px;
+  color: #c8c8c8;
+  margin: 0 0 0.5rem 0;
+}
+
+.site-tagline {
+  font-size: 0.8em;
+  color: #5a5a5a;
+  margin: 0;
+}
+
+#header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+#user-identity {
+  font-size: 0.82em;
+  color: #7a7a7a;
+  margin: 0;
+  text-align: right;
+}
+
+#user-identity strong {
+  color: #e0e0e0;
+  font-weight: bold;
+}
+
+#identity-status {
+  font-size: 0.72em;
+  color: #4a4a4a;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: flex-end;
+}
+
+.presence-dot { color: #2d6a2d; }
+
+.leave-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-family: monospace;
+  font-size: 1em;
+  padding: 0;
+  transition: color 0.1s;
+}
+
+.leave-btn:hover { color: #8a8a8a; }
+
+#admin-link {
+  font-size: 0.68em;
+  color: #2a2a2a !important;
+  text-align: right;
+  display: block;
+  margin-top: 2px;
+}
+
+#admin-link:hover { color: #666 !important; }
+
+/* ── CENTER SECTIONS (landing / auth / gate) ── */
+
+.center-section {
+  padding: 80px 64px;
+  max-width: 440px;
+}
+
+#landing-section { padding-top: 140px; }
+
+/* ── ENTER BUTTON ── */
 
 #btn-enter {
   display: block;
   width: 280px;
-  max-width: 100%;
   text-align: center;
   padding: 11px 0;
   font-size: 0.82em;
   letter-spacing: 3px;
   color: #8a8a8a;
   border-color: #2a2a2a;
+  margin: 0;
+  background: #090909;
 }
 
-#btn-enter:hover {
-  color: #d0d0d0;
-  border-color: #555;
-}
+#btn-enter:hover { color: #d0d0d0; border-color: #555; }
 
-/* ── auth section ── */
-
-#auth-section input { margin-bottom: 10px; }
+/* ── AUTH SECTION ── */
 
 .auth-primary { margin-bottom: 1.6rem; }
 
@@ -125,18 +174,16 @@ button:hover { color: #d0d0d0; border-color: #444; }
   justify-content: center;
   gap: 10px;
   width: 280px;
-  max-width: 100%;
   padding: 12px 0;
   color: #9a9a9a;
   border: 1px solid #303030;
   font-size: 0.88em;
   letter-spacing: 1px;
+  margin: 0;
+  background: #090909;
 }
 
-#btn-google:hover {
-  color: #d8d8d8;
-  border-color: #555;
-}
+#btn-google:hover { color: #d8d8d8; border-color: #555; }
 
 .auth-divider {
   font-size: 0.68em;
@@ -145,224 +192,310 @@ button:hover { color: #d0d0d0; border-color: #444; }
   margin: 0 0 1rem 0;
 }
 
-.auth-btns {
-  display: flex;
-  gap: 8px;
-  margin-top: 4px;
-}
+#auth-section input { width: 280px; max-width: 100%; }
 
-.auth-btns button {
-  font-size: 0.82em;
-  color: #888;
-  border-color: #2a2a2a;
-}
+.auth-btns { display: flex; gap: 8px; margin-top: 4px; }
 
-.auth-btns button:hover {
-  color: #d0d0d0;
-  border-color: #555;
-}
+.auth-btns button { font-size: 0.82em; color: #888; border-color: #2a2a2a; }
+.auth-btns button:hover { color: #d0d0d0; border-color: #555; }
 
-/* ── identity line ── */
+/* ── USERNAME GATE ── */
 
-#user-identity {
+.gate-prompt {
   font-size: 0.76em;
-  color: #8a8a8a;
-  margin: 0 0 2.4rem 0;
-  letter-spacing: 1px;
-}
-
-/* ── username gate ── */
-
-#username-gate {
-  margin-bottom: 0;
-}
-
-.gate-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.gate-row input {
-  width: 200px;
-  margin-bottom: 0;
-}
-
-/* ── destination cards ── */
-
-#destinations {
-  margin: 0.25rem 0;
-}
-
-.dest-card {
-  border: 1px solid #1e1e1e;
-  padding: 1.8rem 2rem;
-  margin-bottom: 6px;
-  cursor: pointer;
-  transition: border-color 0.12s, color 0.12s;
-  color: #555;
-  user-select: none;
-}
-
-.dest-card:hover {
-  border-color: #333;
-  color: #a0a0a0;
-}
-
-.dest-card.active {
-  border-color: #555;
-  color: #e0e0e0;
-}
-
-.dest-card-name {
-  display: block;
-  font-size: 0.9em;
-  text-transform: uppercase;
-  letter-spacing: 4px;
-  margin-bottom: 0.5rem;
-}
-
-.dest-card-desc {
-  display: block;
-  font-size: 0.72em;
-  color: inherit;
-}
-
-/* ── room area ── */
-
-.room-name {
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  font-size: 0.8em;
-  font-weight: normal;
-  margin: 0 0 0.25rem 0;
-  color: #b8b8b8;
-}
-
-.room-desc {
-  font-size: 0.72em;
   color: #5a5a5a;
-  margin: 0 0 1.6rem 0;
-}
-
-#chat-box {
-  min-height: 2rem;
-  margin-bottom: 1.4rem;
-}
-
-#chat-box div {
-  font-size: 0.86em;
-  line-height: 1.85;
-  color: #9a9a9a;
-}
-
-#chat-box strong {
-  color: #5080b0;
-  font-weight: normal;
-}
-
-.message-row {
-  display: flex;
-  gap: 8px;
-}
-
-.message-row input {
-  flex: 1;
-  max-width: 380px;
-  margin-bottom: 0;
-  width: auto;
-}
-
-/* ── site navigation ── */
-
-#site-nav {
-  display: flex;
-  gap: 2.5rem;
-  align-items: baseline;
-  flex-wrap: wrap;
-  font-size: 0.8em;
-}
-
-#admin-link {
-  color: #3a3a3a !important;
-  font-size: 0.88em;
-}
-
-#admin-link:hover { color: #777 !important; }
-
-.nav-logout {
-  background: none;
-  border: none;
-  color: #6a6a6a;
-  cursor: pointer;
-  font-family: monospace;
-  font-size: 1em;
-  padding: 0;
-  transition: color 0.12s;
-}
-
-.nav-logout:hover { color: #aaa; }
-
-/* ── board page ── */
-
-#board-box div {
-  font-size: 0.88em;
-  line-height: 1.75;
-  color: #9a9a9a;
-}
-
-#board-box strong {
-  color: #5080b0;
-  font-weight: normal;
-}
-
-#post-section {
-  display: flex;
-  gap: 8px;
-}
-
-#post-section input {
-  flex: 1;
-  max-width: 380px;
-  margin-bottom: 0;
-  width: auto;
-}
-
-#login-status {
-  font-size: 0.74em;
-  color: #7a7a7a;
-  margin: 0 0 1.6rem 0;
+  margin: 0 0 1.5rem 0;
   letter-spacing: 1px;
 }
 
-/* ── taglines ── */
-
-.manifesto-small {
-  font-size: 0.8em;
-  color: #666;
-  line-height: 2.2;
-  margin: 0 0 0 0;
-}
-
-.tagline-header {
-  color: #666;
-  font-size: 0.8em;
-  line-height: 2.2;
-  margin: 0;
-}
-
-.tagline-footer {
-  margin-top: 5rem;
-  font-size: 0.66em;
-  color: #383838;
-  line-height: 2.6;
-}
-
-/* ── inline error messages ── */
+.gate-row { display: flex; gap: 8px; align-items: center; }
+.gate-row input { width: 220px; margin-bottom: 0; }
 
 .field-error {
   font-size: 0.72em;
   color: #8a4a4a;
   margin: 0.7rem 0 0 0;
-  letter-spacing: 0.5px;
 }
+
+.gate-leave {
+  margin-top: 2.5rem;
+  font-size: 0.7em;
+  color: #2a2a2a;
+}
+
+.leave-link {
+  background: none;
+  border: none;
+  color: #3a3a3a;
+  cursor: pointer;
+  font-family: monospace;
+  font-size: 1em;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.leave-link:hover { color: #777; }
+
+/* ── DESTINATION SECTION ── */
+
+#destination-section {
+  padding: 80px 64px 32px;
+  text-align: center;
+}
+
+#dest-heading {
+  font-size: 0.76em;
+  font-weight: normal;
+  letter-spacing: 8px;
+  color: #5a5a5a;
+  margin: 0 0 3rem 0;
+  text-transform: none;
+}
+
+#destinations {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.dest-card {
+  flex: 1;
+  border: 1px solid #222;
+  padding: 2.8rem 1.5rem 2.4rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+  min-height: 190px;
+  justify-content: center;
+}
+
+.dest-card:hover {
+  border-color: #3a3a3a;
+  background: rgba(255,255,255,0.01);
+}
+
+.dest-card.active {
+  border-color: #888;
+  background: rgba(255,255,255,0.03);
+  box-shadow: 0 0 28px rgba(255,255,255,0.03);
+}
+
+.dest-icon {
+  display: block;
+  font-size: 1.7em;
+  color: #2e2e2e;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.dest-card:hover .dest-icon { color: #555; }
+.dest-card.active .dest-icon { color: #a8a8a8; }
+
+.dest-card-name {
+  display: block;
+  font-size: 0.8em;
+  letter-spacing: 5px;
+  color: #444;
+  transition: color 0.15s;
+}
+
+.dest-card:hover .dest-card-name { color: #8a8a8a; }
+.dest-card.active .dest-card-name { color: #d8d8d8; }
+
+.dest-card-desc {
+  display: block;
+  font-size: 0.68em;
+  color: #2e2e2e;
+  line-height: 1.8;
+  transition: color 0.15s;
+}
+
+.dest-card:hover .dest-card-desc { color: #5a5a5a; }
+.dest-card.active .dest-card-desc { color: #5a5a5a; }
+
+/* ── PHILOSOPHY ── */
+
+.philosophy {
+  text-align: center;
+  font-size: 0.6em;
+  color: #282828;
+  letter-spacing: 0.5px;
+  padding: 8px 0 56px;
+  margin: 0;
+}
+
+/* ── BOTTOM PANELS ── */
+
+#bottom-panels {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  border-top: 1px solid #161616;
+  background: rgba(0,0,0,0.25);
+  min-height: 260px;
+}
+
+#wall-panel {
+  padding: 40px 36px;
+  border-right: 1px solid #161616;
+}
+
+.panel-title {
+  font-size: 0.88em;
+  font-weight: normal;
+  letter-spacing: 2px;
+  color: #b8b8b8;
+  margin: 0 0 1rem 0;
+}
+
+.wall-desc {
+  font-size: 0.72em;
+  color: #484848;
+  line-height: 2;
+  margin: 0 0 2rem 0;
+}
+
+.wall-btn {
+  display: inline-block;
+  border: 1px solid #252525;
+  padding: 10px 18px;
+  font-size: 0.74em;
+  color: #6a6a6a;
+  font-family: monospace;
+  letter-spacing: 0.5px;
+  transition: border-color 0.1s, color 0.1s;
+}
+
+.wall-btn:hover { border-color: #555; color: #d0d0d0; }
+
+#room-panel {
+  padding: 40px 52px;
+}
+
+.room-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.2rem;
+}
+
+#room-name-display {
+  font-size: 0.86em;
+  font-weight: normal;
+  letter-spacing: 2px;
+  color: #b8b8b8;
+  margin: 0 0 0.25rem 0;
+}
+
+#room-desc-display {
+  font-size: 0.7em;
+  color: #454545;
+  margin: 0;
+}
+
+#room-presence {
+  font-size: 0.64em;
+  color: #2a2a2a;
+  margin: 0;
+  white-space: nowrap;
+}
+
+#chat-box {
+  min-height: 32px;
+  margin-bottom: 1rem;
+}
+
+#chat-box div {
+  font-size: 0.82em;
+  line-height: 1.9;
+  color: #8a8a8a;
+}
+
+#chat-box strong {
+  color: #4a78a8;
+  font-weight: normal;
+}
+
+.message-row {
+  display: flex;
+  max-width: 680px;
+}
+
+.message-row input {
+  flex: 1;
+  border: 1px solid #222;
+  border-right: none;
+  padding: 12px 16px;
+  font-size: 0.82em;
+  margin: 0;
+  background: rgba(0,0,0,0.4);
+}
+
+.message-row button {
+  border: 1px solid #222;
+  background: #141414;
+  padding: 12px 28px;
+  font-size: 0.82em;
+  color: #888;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.message-row button:hover {
+  color: #d0d0d0;
+  border-color: #444;
+  background: #1c1c1c;
+}
+
+.room-auth-note {
+  font-size: 0.63em;
+  color: #252525;
+  margin: 0.75rem 0 0;
+}
+
+/* ── BOARD / ADMIN PAGES ── */
+
+body.board-page {
+  padding: 72px 32px 100px;
+  max-width: 640px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+body.board-page h1 {
+  font-size: 0.95em;
+  font-weight: normal;
+  letter-spacing: 3px;
+  color: #c0c0c0;
+  margin: 0 0 2.8rem 0;
+}
+
+body.board-page h2 {
+  font-size: 0.85em;
+  font-weight: normal;
+  letter-spacing: 2px;
+  color: #888;
+  margin: 0 0 1rem 0;
+}
+
+.small { font-size: 0.78em; color: #888; }
+
+#board-box div { font-size: 0.88em; line-height: 1.75; color: #9a9a9a; }
+#board-box strong { color: #5080b0; font-weight: normal; }
+
+#post-section { display: flex; gap: 8px; }
+#post-section input { flex: 1; max-width: 380px; margin-bottom: 0; width: auto; }
+
+#login-status { font-size: 0.74em; color: #7a7a7a; margin: 0 0 1.6rem 0; letter-spacing: 1px; }
+
+.tagline-header { color: #666; font-size: 0.8em; line-height: 2.2; margin: 0; }
+.manifesto-small { font-size: 0.8em; color: #666; line-height: 2.2; margin: 0; }
+
+#admin-status { font-size: 0.82em; color: #7a7a7a; margin: 0 0 1rem 0; }
+
+#users-list div, #username-list div { font-size: 0.82em; color: #8a8a8a; line-height: 1.7; }

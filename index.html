@@ -8,25 +8,30 @@
 </head>
 <body>
 
-<!-- TITLE — always visible -->
-<h1>demon02knight underground</h1>
+<!-- HEADER — always visible -->
+<header id="site-header">
+  <div id="header-left">
+    <h1>demon02knight underground</h1>
+    <p class="site-tagline">a quiet corner of the internet.</p>
+  </div>
+  <div id="header-right" style="display:none">
+    <p id="user-identity">known here as: <strong id="username-display"></strong></p>
+    <p id="identity-status">
+      <span class="presence-dot">●</span>
+      the underground knows you now.
+      <button class="leave-btn" onclick="logout()">(leave)</button>
+    </p>
+    <a href="admin.html" id="admin-link" style="display:none">admin ↗</a>
+  </div>
+</header>
 
-<!-- MANIFESTO — always visible, the hero -->
-<p class="manifesto">
-  this is not a brand.<br>
-  this is not content.<br>
-  this is a quiet corner of the internet.
-</p>
-
-<hr>
-
-<!-- LANDING — enter threshold, visible to visitors -->
-<div id="landing-section">
+<!-- LANDING — enter threshold (logged out) -->
+<div id="landing-section" class="center-section">
   <button id="btn-enter" onclick="revealAuth()">enter</button>
 </div>
 
-<!-- AUTH SECTION — revealed after enter -->
-<div id="auth-section" style="display:none">
+<!-- AUTH SECTION — revealed after enter click -->
+<div id="auth-section" class="center-section" style="display:none">
 
   <div class="auth-primary">
     <button id="btn-google" onclick="loginWithGoogle()">
@@ -52,67 +57,77 @@
 
 </div>
 
-<!-- USER SECTION — visible when logged in -->
-<div id="user-section" style="display:none">
-
-  <p id="user-identity"></p>
-
-  <!-- USERNAME GATE — blocks access until name is chosen -->
-  <div id="username-gate" style="display:none">
-    <div class="gate-row">
-      <input type="text" id="username-input" placeholder="choose a name to enter">
-      <button onclick="saveUsername()">enter</button>
-    </div>
-    <p id="gate-error" class="field-error" style="display:none"></p>
+<!-- USERNAME GATE — logged in, no username yet -->
+<div id="username-gate" class="center-section" style="display:none">
+  <p class="gate-prompt">the underground does not know you yet</p>
+  <div class="gate-row">
+    <input type="text" id="username-input" placeholder="choose a name to enter">
+    <button onclick="saveUsername()">enter</button>
   </div>
+  <p id="gate-error" class="field-error" style="display:none"></p>
+  <p class="gate-leave"><button class="leave-link" onclick="logout()">leave</button></p>
+</div>
 
-  <!-- UNDERGROUND — revealed only after username is set -->
-  <div id="underground" style="display:none">
+<!-- UNDERGROUND — logged in with username -->
+<div id="underground" style="display:none">
 
+  <!-- DESTINATION CARDS -->
+  <section id="destination-section">
+    <h2 id="dest-heading">choose your destination</h2>
     <div id="destinations">
       <div class="dest-card" data-room="roomA" data-name="VALHALLA" data-desc="the hall of honored dead">
+        <span class="dest-icon">ᛏ</span>
         <span class="dest-card-name">VALHALLA</span>
         <span class="dest-card-desc">the hall of honored dead</span>
       </div>
       <div class="dest-card" data-room="roomB" data-name="ELYSIUM" data-desc="where wandering minds gather">
+        <span class="dest-icon">⊙</span>
         <span class="dest-card-name">ELYSIUM</span>
         <span class="dest-card-desc">where wandering minds gather</span>
       </div>
       <div class="dest-card" data-room="roomC" data-name="DUAT" data-desc="the passage between worlds">
+        <span class="dest-icon">☥</span>
         <span class="dest-card-name">DUAT</span>
         <span class="dest-card-desc">the passage between worlds</span>
       </div>
     </div>
+  </section>
 
-    <!-- ROOM AREA — revealed when a destination is selected -->
-    <div id="room-area" style="display:none">
-      <hr>
-      <p class="room-name" id="room-name-display"></p>
-      <p class="room-desc"  id="room-desc-display"></p>
-      <div id="chat-box"></div>
-      <div class="message-row">
-        <input type="text" id="message-input" placeholder="leave something behind...">
-        <button onclick="sendMessage()">send</button>
-      </div>
+  <!-- PHILOSOPHY -->
+  <p class="philosophy">signal &gt; noise &nbsp;&bull;&nbsp; depth &gt; velocity &nbsp;&bull;&nbsp; presence &gt; performance</p>
+
+  <!-- BOTTOM PANELS -->
+  <div id="bottom-panels">
+
+    <!-- LEFT: The Wall -->
+    <div id="wall-panel">
+      <h3 class="panel-title">the wall</h3>
+      <p class="wall-desc">guests may read.<br>login to leave a mark.</p>
+      <a href="board.html" class="wall-btn">enter the wall &#8594;</a>
     </div>
 
-    <hr>
-
-    <div id="site-nav">
-      <a href="board.html">the wall →</a>
-      <a href="admin.html" id="admin-link" style="display:none">admin ↗</a>
-      <button class="nav-logout" onclick="logout()">leave</button>
+    <!-- RIGHT: Active Room -->
+    <div id="room-panel">
+      <div id="room-area" style="display:none">
+        <div class="room-panel-header">
+          <div>
+            <p id="room-name-display"></p>
+            <p id="room-desc-display"></p>
+          </div>
+          <p id="room-presence">no one here yet &#128100;</p>
+        </div>
+        <div id="chat-box"></div>
+        <div class="message-row">
+          <input type="text" id="message-input" placeholder="speak your mind...">
+          <button onclick="sendMessage()">send</button>
+        </div>
+        <p class="room-auth-note">&#128274; your words. logged in only.</p>
+      </div>
     </div>
 
   </div>
 
 </div>
-
-<p class="tagline-footer">
-  signal > noise<br>
-  depth > velocity<br>
-  presence > performance
-</p>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
@@ -148,11 +163,11 @@
     appId: "1:446345417376:web:0457219bc40a8b0acf2fc5"
   };
 
-  const app           = initializeApp(firebaseConfig);
-  const auth          = getAuth(app);
-  const db            = getFirestore(app);
+  const app            = initializeApp(firebaseConfig);
+  const auth           = getAuth(app);
+  const db             = getFirestore(app);
   const googleProvider = new GoogleAuthProvider();
-  const ADMIN_UID     = "rHpRdUEU0NbRui3qxmetIjQESuk1";
+  const ADMIN_UID      = "rHpRdUEU0NbRui3qxmetIjQESuk1";
 
   let currentRoom = null;
   let unsubscribe = null;
@@ -167,20 +182,19 @@
   // ── AUTH STATE ──────────────────────────────────────────────
 
   onAuthStateChanged(auth, async (user) => {
-    const landingSection = document.getElementById("landing-section");
-    const authSection    = document.getElementById("auth-section");
-    const userSection    = document.getElementById("user-section");
-    const usernameGate   = document.getElementById("username-gate");
-    const underground    = document.getElementById("underground");
-    const userIdentity   = document.getElementById("user-identity");
-    const adminLink      = document.getElementById("admin-link");
+    const landingSection  = document.getElementById("landing-section");
+    const authSection     = document.getElementById("auth-section");
+    const headerRight     = document.getElementById("header-right");
+    const usernameGate    = document.getElementById("username-gate");
+    const underground     = document.getElementById("underground");
+    const usernameDisplay = document.getElementById("username-display");
+    const adminLink       = document.getElementById("admin-link");
 
     if (user) {
       landingSection.style.display = "none";
       authSection.style.display    = "none";
-      userSection.style.display    = "block";
 
-      const isAdmin = user.uid === ADMIN_UID;
+      const isAdmin  = user.uid === ADMIN_UID;
       const userRef  = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
 
@@ -193,21 +207,24 @@
       }
 
       if (displayName) {
-        userIdentity.textContent   = "known here as: " + displayName;
-        usernameGate.style.display = "none";
-        underground.style.display  = "block";
-        adminLink.style.display    = isAdmin ? "inline" : "none";
+        usernameDisplay.textContent  = displayName;
+        headerRight.style.display    = "flex";
+        usernameGate.style.display   = "none";
+        underground.style.display    = "block";
+        adminLink.style.display      = isAdmin ? "block" : "none";
       } else {
-        userIdentity.textContent   = "the underground does not know you yet";
-        usernameGate.style.display = "block";
-        underground.style.display  = "none";
+        headerRight.style.display    = "none";
+        usernameGate.style.display   = "block";
+        underground.style.display    = "none";
         document.getElementById("username-input").value = "";
       }
 
     } else {
       landingSection.style.display = "block";
       authSection.style.display    = "none";
-      userSection.style.display    = "none";
+      headerRight.style.display    = "none";
+      usernameGate.style.display   = "none";
+      underground.style.display    = "none";
 
       if (unsubscribe) { unsubscribe(); unsubscribe = null; }
       currentRoom = null;
@@ -226,7 +243,7 @@
       card.classList.add("active");
 
       currentRoom = card.dataset.room;
-      document.getElementById("room-name-display").textContent = card.dataset.name;
+      document.getElementById("room-name-display").textContent = card.dataset.name.toLowerCase();
       document.getElementById("room-desc-display").textContent = card.dataset.desc;
       document.getElementById("room-area").style.display = "block";
 
@@ -276,8 +293,8 @@
     const gateError = document.getElementById("gate-error");
 
     function showGateError(msg) {
-      gateError.textContent    = msg;
-      gateError.style.display  = "block";
+      gateError.textContent   = msg;
+      gateError.style.display = "block";
     }
 
     gateError.style.display = "none";
@@ -311,17 +328,17 @@
         return;
       }
 
-      // Only write to username registry if not already claimed by this user
       if (!usernameSnap.exists()) {
         await setDoc(usernameRef, { uid: auth.currentUser.uid });
       }
       await setDoc(userRef, { displayName: newName, locked: true }, { merge: true });
 
       const isAdmin = auth.currentUser.uid === ADMIN_UID;
-      document.getElementById("user-identity").textContent   = "known here as: " + newName;
-      document.getElementById("username-gate").style.display = "none";
-      document.getElementById("underground").style.display   = "block";
-      document.getElementById("admin-link").style.display    = isAdmin ? "inline" : "none";
+      document.getElementById("username-display").textContent  = newName;
+      document.getElementById("header-right").style.display    = "flex";
+      document.getElementById("username-gate").style.display   = "none";
+      document.getElementById("underground").style.display     = "block";
+      document.getElementById("admin-link").style.display      = isAdmin ? "block" : "none";
 
     } catch (err) {
       console.error("saveUsername failed:", err);
@@ -365,6 +382,14 @@
 
         chatBox.appendChild(messageDiv);
       });
+
+      const count = snapshot.docs.length;
+      const presenceEl = document.getElementById("room-presence");
+      if (presenceEl) {
+        presenceEl.textContent = count > 0
+          ? count + " message" + (count !== 1 ? "s" : "")
+          : "no one here yet \u{1F464}";
+      }
     });
   }
 
