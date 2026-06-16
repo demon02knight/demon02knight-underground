@@ -20,7 +20,7 @@ service cloud.firestore {
       allow read:   if request.auth != null
                     && (request.auth.uid == userId || isAdmin());
       allow create: if request.auth.uid == userId;
-      allow update: if (request.auth.uid == userId && !resource.data.locked)
+      allow update: if (request.auth.uid == userId && resource.data.get('locked', false) != true)
                     || isAdmin();
       allow delete: if isAdmin();
     }
